@@ -7,11 +7,12 @@ The project covers data integration, exploratory analysis, leakage-safe
 preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
-> **Current status:** Phase 10 and Phase 11 artifacts are available, and a
-> Phase 12 time-based validation diagnostic has been added. Inference, SHAP
-> explainability, the canonical PR-AUC metric, and the artifact manifest are
-> complete. Engineering hardening (API, CI/CD, final documentation) is in
-> progress. See [Known limitations](#known-limitations).
+> **Current status:** Phase 10 and Phase 11 artifacts are available, a
+> Phase 12 time-based validation diagnostic has been added, and the Phase 13
+> REST API is available. Inference, SHAP explainability, the canonical PR-AUC
+> metric, and the artifact manifest are complete. Engineering hardening
+> (CI/CD, final documentation) is in progress. See
+> [Known limitations](#known-limitations).
 
 ---
 
@@ -24,6 +25,7 @@ optimization, SHAP explainability, and model packaging.
 - [Explainability](#explainability)
 - [Installation](#installation)
 - [Quick start](#quick-start)
+- [REST API](#rest-api)
 - [Notebook workflow](#notebook-workflow)
 - [Reproducibility notes](#reproducibility-notes)
 - [Artifact manifest](#artifact-manifest)
@@ -91,16 +93,23 @@ fraud-detection-system/
 ├── artifacts/
 │   └── manifest.json        # artifact inventory and SHA-256 hashes
 ├── results/                 # metrics, reports and plots
+├── examples/
+│   └── sample_transaction.json  # valid API payload template
 ├── scripts/
-│   └── audit_metrics.py     # PR-AUC definition audit
+│   ├── audit_metrics.py     # PR-AUC definition audit
+│   └── time_based_validation.py  # Phase 12 time-bucket diagnostic
 ├── src/
 │   ├── prediction.py        # inference and explanation utilities
+│   ├── api/
+│   │   ├── main.py          # FastAPI application
+│   │   └── schemas.py       # response models
 │   └── fraud/
 │       ├── metrics.py       # canonical evaluation metrics (AP for PR-AUC)
 │       └── artifacts.py     # manifest build/validate CLI
 ├── tests/
 │   ├── test_metrics.py
-│   └── test_artifacts.py
+│   ├── test_artifacts.py
+│   └── test_api.py
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -256,8 +265,8 @@ Full artifacts:
 - `results/phase10_plots/shap_beeswarm.png`
 
 SHAP values describe model associations, not causal effects. The presence of
-`TransactionDT` among the top features reinforces the need for the planned
-time-based validation.
+`TransactionDT` among the top features reinforces the need for the time-based
+validation documented in Phase 12.
 
 ---
 
@@ -330,6 +339,42 @@ preprocessor = load_preprocessor()
 
 Direct `joblib.load("models/preprocessor.pkl")` fails because the artifact
 references compatibility symbols defined in `src.prediction`.
+
+---
+
+## REST API
+
+The Phase 13 FastAPI service loads the frozen model once at startup. Start it
+from the project root:
+
+```powershell
+python -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+```
+
+Interactive OpenAPI docs are available at `http://127.0.0.1:8000/docs`.
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/health` | Liveness and model-load status |
+| `GET` | `/model/info` | Model type, feature counts, threshold, risk bands |
+| `GET` | `/model/features` | Required raw feature names and derived flags |
+| `POST` | `/predict` | Score one transaction |
+| `POST` | `/predict/batch` | Score up to 500 transactions |
+| `POST` | `/explain` | Score one transaction and return SHAP factors |
+
+[`examples/sample_transaction.json`](examples/sample_transaction.json) is a valid
+payload. It has 433 fields because the two `*_is_missing` flags are derived from
+the raw `DeviceInfo` and `id_33` fields. Example:
+
+```powershell
+$body = Get-Content examples/sample_transaction.json -Raw
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/predict `
+  -ContentType "application/json" -Body $body
+```
+
+The API is intentionally strict: missing or unexpected features return `422`.
+There is no authentication, rate limiting, or TLS in this local service; deploy
+it behind a gateway for production use.
 
 ---
 
@@ -407,7 +452,8 @@ python -m unittest discover -s tests -v
 ```
 
 The suite covers the canonical metrics, input validation, manifest generation,
-and manifest validation.
+manifest validation, and the REST API (health, model info, single and batch
+prediction, validation errors, and SHAP explanation).
 
 ---
 
@@ -430,8 +476,9 @@ and manifest validation.
   cannot replace a strict forward-in-time retrain, which is still pending.
 - The test set has been reused across phases and is not a pristine holdout.
 - The probabilities are not calibrated; risk bands are heuristic.
-- There is no API, CI pipeline, or model card yet. A small `unittest` suite
-  covers the metrics module and artifact manifest.
+- There is no CI pipeline or model card yet. The API has no authentication,
+  rate limiting, or TLS and should run behind a gateway in production. A
+  `unittest` suite covers the metrics module, artifact manifest, and API.
 - `models/xgboost.pkl` requires the optional `xgboost` package.
 
 ---

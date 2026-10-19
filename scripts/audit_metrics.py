@@ -21,7 +21,7 @@ from scipy import sparse
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.fraud.metrics import pr_auc, pr_auc_trapezoidal  # noqa: E402
+from src.fraud.metrics import pr_auc, pr_auc_trapezoidal
 
 DATA_DIR = PROJECT_ROOT / "data" / "processed"
 MODELS_DIR = PROJECT_ROOT / "models"
@@ -49,7 +49,7 @@ def _evaluate_model(
             "dataset": "test",
             "model": model_name,
             "source": f"models/{model_file}",
-            "n_samples": int(len(y_test)),
+            "n_samples": len(y_test),
             "n_positive": int(y_test.sum()),
             "pr_auc_average_precision": None,
             "pr_auc_trapezoidal": None,
@@ -73,7 +73,7 @@ def _evaluate_model(
         "dataset": "test",
         "model": model_name,
         "source": f"models/{model_file}",
-        "n_samples": int(len(y_test)),
+        "n_samples": len(y_test),
         "n_positive": int(y_test.sum()),
         "pr_auc_average_precision": average_precision,
         "pr_auc_trapezoidal": trapezoidal,
@@ -90,7 +90,7 @@ def _evaluate_oof() -> dict[str, object]:
             "dataset": "train_oof",
             "model": "Random Forest (tuned)",
             "source": "results/oof_proba.npy",
-            "n_samples": int(len(y_train)),
+            "n_samples": len(y_train),
             "n_positive": int(y_train.sum()),
             "pr_auc_average_precision": None,
             "pr_auc_trapezoidal": None,
@@ -108,7 +108,7 @@ def _evaluate_oof() -> dict[str, object]:
         "dataset": "train_oof",
         "model": "Random Forest (tuned)",
         "source": "results/oof_proba.npy",
-        "n_samples": int(len(y_train)),
+        "n_samples": len(y_train),
         "n_positive": int(y_train.sum()),
         "pr_auc_average_precision": average_precision,
         "pr_auc_trapezoidal": trapezoidal,
@@ -187,7 +187,7 @@ def main() -> int:
                 "dataset": "test",
                 "model": "XGBoost (untuned)",
                 "source": "models/xgboost.pkl",
-                "n_samples": int(len(y_test)),
+                "n_samples": len(y_test),
                 "n_positive": int(y_test.sum()),
                 "pr_auc_average_precision": None,
                 "pr_auc_trapezoidal": None,

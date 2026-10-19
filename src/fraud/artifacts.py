@@ -13,7 +13,7 @@ import hashlib
 import json
 import platform
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -330,7 +330,7 @@ def build_manifest(
     manifest: dict[str, Any] = {
         "schema_version": 1,
         "project": "fraud-detection-system",
-        "generated_at": datetime.now(timezone.utc)
+        "generated_at": datetime.now(UTC)
         .replace(microsecond=0)
         .isoformat()
         .replace("+00:00", "Z"),

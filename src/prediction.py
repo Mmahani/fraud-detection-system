@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 import joblib
 import numpy as np
@@ -78,6 +79,9 @@ def validate_transaction(transaction: Mapping[str, Any] | pd.DataFrame, required
         raise TypeError('transaction must be a mapping, Series, or pandas DataFrame')
     if frame.empty:
         raise ValueError('transaction must contain at least one row')
+    # Normalize JSON ``null`` values to NaN so the fitted imputers treat them
+    # exactly like the missing values seen during training.
+    frame = frame.where(pd.notna(frame), np.nan)
     # These two numeric columns were created during the original preprocessing
     # from raw high-cardinality fields and must be recreated at inference time.
     for derived, raw_name in [('DeviceInfo_is_missing', 'DeviceInfo'), ('id_33_is_missing', 'id_33')]:
@@ -104,8 +108,6 @@ def validate_transaction(transaction: Mapping[str, Any] | pd.DataFrame, required
 
 def get_risk_level(probability: float, risk_config: Mapping[str, str]) -> str:
     low = float(str(risk_config['low']).split('<')[1].strip())
-    medium_match = str(risk_config['medium'])
-    medium = float(medium_match.split('<=')[0].strip())
     high = float(str(risk_config['high']).split('>=')[1].strip())
     if probability < low:
         return 'Low'
@@ -162,7 +164,7 @@ def explain_transaction(transaction, model=None, preprocessor=None, threshold_co
     model = model or load_model()
     preprocessor = preprocessor or load_preprocessor()
     required = get_required_features(preprocessor)
-    frame, transformed = _transform(transaction, preprocessor, required)
+    _, transformed = _transform(transaction, preprocessor, required)
     feature_name_parts = []
     for branch_name, branch, columns in preprocessor.transformers_:
         columns = list(columns)

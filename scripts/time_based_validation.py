@@ -22,7 +22,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy import sparse
-from sklearn.metrics import average_precision_score, f1_score, precision_score, recall_score, roc_auc_score
+from sklearn.metrics import (
+    average_precision_score,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
 
 PROJECT = Path(__file__).resolve().parents[1]
 PROCESSED = PROJECT / "data" / "processed"
@@ -138,7 +144,7 @@ def main() -> int:
         time_bucket = time_scaled[idx]
         row_base = {
             "Bucket": bucket_index,
-            "Rows": int(len(idx)),
+            "Rows": len(idx),
             "Fraud Count": int(y_bucket.sum()),
             "Fraud Rate (%)": float(y_bucket.mean() * 100),
             "Scaled Time Min": float(time_bucket.min()),
@@ -182,7 +188,7 @@ def main() -> int:
         ),
         "n_buckets": N_BUCKETS,
         "threshold": THRESHOLD,
-        "rows": int(len(y_test)),
+        "rows": len(y_test),
         "models": list(probabilities.keys()),
         "first_last": first_last,
         "prevalence_caveat": (

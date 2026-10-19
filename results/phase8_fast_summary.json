@@ -24,7 +24,22 @@
     "precision": 0.004405362990767653,
     "roc_auc": 0.0025529066309754726
   },
+  "cv_summary_5_fold_training_only": {
+    "pr_auc": 0.7048871268268885,
+    "f1": 0.6666827372347159,
+    "recall": 0.608227465214761,
+    "precision": 0.737666506916508,
+    "roc_auc": 0.9318181610289423
+  },
+  "cv_std_5_fold_training_only": {
+    "pr_auc": 0.00898912674359926,
+    "f1": 0.007883573941511473,
+    "recall": 0.01064154892923394,
+    "precision": 0.007505758926284348,
+    "roc_auc": 0.0033927544224974615
+  },
   "final_validation_cv": 5,
+  "final_validation_executed": true,
   "tuned_test": {
     "Accuracy": 0.9801537575778101,
     "Balanced Accuracy": 0.8137818712286744,
@@ -66,5 +81,6 @@
   },
   "train_test_f1_gap": 0.2656755378781196,
   "improved_by_rule": true,
-  "decision": "READY FOR THRESHOLD OPTIMIZATION"
+  "decision": "READY FOR THRESHOLD OPTIMIZATION",
+  "readiness_decision_based_on_test": false
 }

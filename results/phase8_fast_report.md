@@ -4,7 +4,9 @@
 
 The optimized Phase 8 script was executed successfully in the agent's environment using the real processed IEEE-CIS Fraud Detection project files. The user's Windows machine was not used for the computation. The test set was loaded but was used only in the final evaluation block.
 
-The speed optimization used **3-fold StratifiedKFold** for the class-weight experiments and RandomizedSearchCV, with `n_iter=3`. Random Forest used `n_jobs=-1`, while the outer search used `n_jobs=1` to avoid excessive nested memory consumption. The original 5-fold search was therefore reduced to 3-fold; this shortens execution time but makes the cross-validation estimate somewhat less stable.
+The speed optimization used **3-fold StratifiedKFold** for the class-weight experiments and RandomizedSearchCV, with `n_iter=3`. Random Forest used `n_jobs=-1`, while the outer search used `n_jobs=1` to avoid excessive nested memory consumption. The search cross-validation was therefore reduced to 3-fold, which shortens execution time but makes the search estimate somewhat less stable.
+
+After the search, the tuned model was evaluated with a separate **5-fold training-only** cross-validation (`final_validation_cv: 5`, `final_validation_executed: true`). This final validation uses `X_train` and `y_train` only; the test set is not involved.
 
 ## Data verification
 
@@ -40,6 +42,18 @@ The search used 3 folds and 3 randomly selected parameter combinations, for 9 to
 | `class_weight` | `balanced` |
 | Best 3-fold CV PR-AUC | `0.6847187000753766` |
 
+## Final five-fold training-only validation
+
+The tuned configuration was re-validated with 5-fold `StratifiedKFold` on the training set only. These values, not the test metrics, drive the readiness decision.
+
+| Metric | Mean | Std (ddof=1) |
+|---|---:|---:|
+| PR-AUC | 0.704887 | 0.008989 |
+| F1 | 0.666683 | 0.007884 |
+| Recall | 0.608227 | 0.010642 |
+| Precision | 0.737667 | 0.007506 |
+| ROC-AUC | 0.931818 | 0.003393 |
+
 ## Final test evaluation
 
 The tuned model was retrained on the complete training set and then evaluated once on the untouched test set.
@@ -60,11 +74,11 @@ The tuned model was retrained on the complete training set and then evaluated on
 
 ## Decision
 
-Under the Phase 8 rule requiring higher test PR-AUC and non-decreasing F1, the tuned model is classified as:
+The readiness rule is based only on the 5-fold training-only validation (positive mean PR-AUC and F1, and a PR-AUC standard deviation below the mean), never on the test set:
 
 > **READY FOR THRESHOLD OPTIMIZATION**
 
-The tuned model improved test PR-AUC from **0.722463** to **0.730518**, an absolute increase of **0.008055**, and improved F1 from **0.663877** to **0.691254**. It also increased recall and reduced false negatives, but it produced more false positives and lower precision. This trade-off is expected from class balancing and should be addressed in Phase 9 through threshold optimization.
+For reference, the tuned model's test PR-AUC improved from **0.722463** to **0.730518** (absolute increase **0.008055**) and F1 from **0.663877** to **0.691254**. It also increased recall and reduced false negatives, but produced more false positives and lower precision. This trade-off is expected from class balancing and should be addressed in Phase 9 through threshold optimization. These test values are reported after the model was frozen and did not influence the readiness decision.
 
 ## Saved artifacts
 
@@ -77,4 +91,4 @@ The following files were created in `/home/ubuntu/fraud_local`:
 - `results/final_model_comparison_phase8.csv`
 - `results/phase8_fast_summary.json`
 
-**STOP:** Phase 8 is complete. Do not begin Phase 9 until explicit confirmation.
+**Phase 8 complete.** Later phases cover model validation, threshold optimization, and packaging.

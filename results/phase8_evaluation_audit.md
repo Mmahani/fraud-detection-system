@@ -18,12 +18,12 @@ Compared with the untuned Random Forest, the tuned model increased PR-AUC from `
 
 The test set is evaluated after the final tuned model is fitted, and the search scoring uses `average_precision`. The code therefore computes the reported test metrics correctly and does not use test data inside `RandomizedSearchCV`.
 
-However, the code declares `cv_final = StratifiedKFold(n_splits=5, ...)` and records `final_validation_cv: 5`, but it never passes `cv_final` to `cross_validate` or otherwise executes a five-fold final validation. Therefore, the label `final_validation_cv: 5` is a documentation mismatch and must not be described as an executed validation result.
+An earlier draft declared `cv_final = StratifiedKFold(n_splits=5, ...)` and recorded `final_validation_cv: 5` without executing it. The current notebook source does pass `cv_final` to `cross_validate` on `X_train`/`y_train`, and `results/phase8_fast_summary.json` now records the executed results in `cv_summary_5_fold_training_only` and `cv_std_5_fold_training_only`, with `final_validation_executed: true`. The label is therefore no longer a documentation mismatch.
 
-A second issue is that the variable `improved` uses the final test PR-AUC and F1 to decide `READY FOR THRESHOLD OPTIMIZATION`. This does not alter the metric calculations, but it uses the test set to make a model-readiness decision. Under a strict leakage-control protocol, that readiness decision should be based on training cross-validation results; the test set should be reserved for a final report after the model is frozen.
+A second issue was that an earlier draft used the final test PR-AUC and F1 for the `READY FOR THRESHOLD OPTIMIZATION` decision. The current notebook source derives `improved` from the 5-fold training-only validation (`cv_final_summary`, `cv_final_std`) and records `readiness_decision_based_on_test: false`. The test set is therefore reserved for the final report after the model is frozen.
 
 The train/test F1 gap is calculated from a training-set metric and a test-set metric. This is useful as a diagnostic, but it is not an unbiased generalization estimate because the tuned model was fitted on all training rows before its training F1 was measured. The large observed gap should be described as an overfitting diagnostic, not as cross-validated performance.
 
-## Recommended wording correction
+## Resolution status
 
-The numerical results are valid and consistent, but the Phase 8 conclusion should be changed from a test-driven `READY FOR THRESHOLD OPTIMIZATION` rule to a training-CV-based readiness rule. The reported five-fold final validation should either be executed and saved or removed from the metadata. No test metrics should be used to select, reject, or approve the model before the final locked evaluation.
+The numerical results are valid and consistent. The two methodological findings above have been addressed in the current artifacts: the five-fold training-only validation is executed and saved, and the readiness decision is based on training cross-validation rather than test metrics. `results/phase8_fast_report.md` and `results/phase8_fast_summary.json` were updated accordingly.

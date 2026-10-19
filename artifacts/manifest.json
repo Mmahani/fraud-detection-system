@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "fraud-detection-system",
-  "generated_at": "2026-10-19T19:45:54Z",
+  "generated_at": "2026-10-19T19:49:55Z",
   "files": [
     {
       "path": "models/best_tuned_model.pkl",
@@ -63,8 +63,8 @@
       "required": true,
       "description": "Phase 8 CV and test summary",
       "status": "present",
-      "size_bytes": 1863,
-      "sha256": "bb8a27ac95d6eb634a76a56e7fdc36fc51454c8882ece3d450665ce2bc1992f7"
+      "size_bytes": 2461,
+      "sha256": "616fc1e03e743eb0e8fddc0a8922186793b1b5a3076d68cf02e08d14ace771cf"
     },
     {
       "path": "results/phase8_evaluation_audit.md",
@@ -72,8 +72,8 @@
       "required": true,
       "description": "Phase 8 metric and leakage audit",
       "status": "present",
-      "size_bytes": 3533,
-      "sha256": "e97f9e6b71864e350867358cd514adf87ab5992c79618b99a9d450a3fee075c5"
+      "size_bytes": 3579,
+      "sha256": "693e7292b9bce778136217dfdcf4b4fd4bcb938b7f3497831f6eefc0ea99c689"
     },
     {
       "path": "results/phase9_final_report.md",
@@ -108,8 +108,8 @@
       "required": true,
       "description": "Phase 8 narrative report",
       "status": "present",
-      "size_bytes": 3584,
-      "sha256": "1990d846eeb4f64dd205e2108c70b9e7dd068e5dcac1e46f3a2db30627062767"
+      "size_bytes": 4442,
+      "sha256": "f74da2f9a7b98602d8f5f2f79c710d6f5aa3d1f9a1bcefa1f1a23df3bc8cc535"
     },
     {
       "path": "results/phase8_tuned_vs_untuned_test.csv",

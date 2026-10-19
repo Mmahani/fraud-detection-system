@@ -32,6 +32,7 @@ optimization, SHAP explainability, and model packaging.
 - [Reproducibility notes](#reproducibility-notes)
 - [Artifact manifest](#artifact-manifest)
 - [Testing](#testing)
+- [Release notes](#release-notes)
 - [Known limitations](#known-limitations)
 - [Data and license](#data-and-license)
 
@@ -118,6 +119,7 @@ fraud-detection-system/
 ├── .gitignore
 ├── MODEL_CARD.md
 ├── README.md
+├── RELEASE_NOTES.md
 ├── requirements.txt
 └── requirements-ci.txt
 ```
@@ -472,6 +474,14 @@ prediction, validation errors, and SHAP explanation).
 GitHub Actions runs `.github/workflows/ci.yml` on pushes and pull requests to
 `main`. It installs `requirements-ci.txt`, runs `ruff`, and executes the
 `unittest` suite.
+
+---
+
+## Release notes
+
+The delivery snapshot is documented in [RELEASE_NOTES.md](RELEASE_NOTES.md)
+(`v1.0.0`): verification results, headline metrics, deliverables, handoff
+checklist, and known limitations.
 
 ---
 

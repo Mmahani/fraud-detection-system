@@ -1,0 +1,36 @@
+# ============================================================
+# Fraud Detection System — Python dependencies
+# Tested on Python 3.12.6 (Windows)
+# Model artifacts were serialized with scikit-learn 1.9.0.
+# ============================================================
+
+# --- Core runtime ---
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.9.0
+joblib==1.5.3
+
+# --- Visualization ---
+matplotlib==3.10.9
+seaborn==0.13.2
+
+# --- Explainability ---
+shap==0.54.1
+
+# --- Model comparison (optional but used by Phase 6/8 notebooks) ---
+xgboost==3.4.1
+
+# --- Notebooks ---
+jupyter>=1.1,<2
+notebook>=7.0,<8
+nbconvert>=7.0,<8
+
+# --- API (Phase 12) ---
+fastapi>=0.140,<1
+uvicorn[standard]>=0.51,<1
+httpx>=0.28,<1
+
+# --- Development and testing ---
+pytest>=8.0,<9
+ruff>=0.6,<1

@@ -157,6 +157,30 @@ ARTIFACT_SPECS: list[dict[str, Any]] = [
         "description": "Machine-readable PR-AUC audit table",
     },
     {
+        "path": "results/phase12_time_validation.csv",
+        "group": "evaluation",
+        "required": True,
+        "description": "Phase 12 time-bucket diagnostic table",
+    },
+    {
+        "path": "results/phase12_time_validation.md",
+        "group": "evaluation",
+        "required": True,
+        "description": "Phase 12 time-based validation report",
+    },
+    {
+        "path": "results/phase12_summary.json",
+        "group": "evaluation",
+        "required": True,
+        "description": "Phase 12 diagnostic summary",
+    },
+    {
+        "path": "results/phase12_plots/time_bucket_pr_auc.png",
+        "group": "evaluation",
+        "required": False,
+        "description": "Phase 12 time-bucket PR-AUC plot",
+    },
+    {
         "path": "results/improvement_comparison.csv",
         "group": "evaluation",
         "required": False,

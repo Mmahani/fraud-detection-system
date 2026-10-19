@@ -7,9 +7,10 @@ The project covers data integration, exploratory analysis, leakage-safe
 preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
-> **Current status:** Phase 10 and Phase 11 artifacts are available. Inference,
-> SHAP explainability, the canonical PR-AUC metric, and the artifact manifest
-> are complete. Engineering hardening (API, CI/CD, final documentation) is in
+> **Current status:** Phase 10 and Phase 11 artifacts are available, and a
+> Phase 12 time-based validation diagnostic has been added. Inference, SHAP
+> explainability, the canonical PR-AUC metric, and the artifact manifest are
+> complete. Engineering hardening (API, CI/CD, final documentation) is in
 > progress. See [Known limitations](#known-limitations).
 
 ---
@@ -195,6 +196,35 @@ environment).
 
 The test set has been evaluated in several phases. The values above are therefore
 retrospective and should not be treated as a pristine final holdout.
+
+### Time-based validation diagnostic
+
+The original split is random and stratified, and `TransactionDT` is one of the
+strongest features, so temporal leakage is possible. Phase 12 scores the frozen
+models on five equal-count time buckets of the reserved test set, from earliest
+to latest.
+
+| Time bucket | Tuned Random Forest PR-AUC | Fraud rate |
+|---|---:|---:|
+| 1 (earliest) | 0.654729 | 2.41% |
+| 2 | 0.764482 | 3.99% |
+| 3 | 0.741715 | 3.73% |
+| 4 | 0.737265 | 3.97% |
+| 5 (latest) | 0.723480 | 3.40% |
+
+The later buckets are stable for the tuned model (`0.723–0.742` PR-AUC). The
+earliest bucket is weaker, but it also has the lowest fraud rate, and PR-AUC is
+prevalence-sensitive, so part of that gap is compositional rather than temporal
+degradation. Because the split is random, every bucket overlaps the training
+period: this is a temporal-stability check on unseen rows, not a strict
+forward-in-time holdout. A full forward-in-time retrain is deferred under the
+current 8 GB memory budget.
+
+Artifacts: [`results/phase12_time_validation.md`](results/phase12_time_validation.md),
+[`results/phase12_time_validation.csv`](results/phase12_time_validation.csv),
+[`results/phase12_summary.json`](results/phase12_summary.json), and
+`results/phase12_plots/time_bucket_pr_auc.png`. Reproduce with
+`python scripts/time_based_validation.py`.
 
 ---
 
@@ -395,7 +425,9 @@ and manifest validation.
 - The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so
   overfitting remains a concern.
 - The current split is random and stratified, not time-based; `TransactionDT` is
-  among the most important SHAP features, so temporal leakage is possible.
+  among the most important SHAP features, so temporal leakage is possible. The
+  Phase 12 diagnostic checks temporal stability on the reserved holdout, but it
+  cannot replace a strict forward-in-time retrain, which is still pending.
 - The test set has been reused across phases and is not a pristine holdout.
 - The probabilities are not calibrated; risk bands are heuristic.
 - There is no API, CI pipeline, or model card yet. A small `unittest` suite

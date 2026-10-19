@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "fraud-detection-system",
-  "generated_at": "2026-10-19T19:49:55Z",
+  "generated_at": "2026-10-19T20:27:18Z",
   "files": [
     {
       "path": "models/best_tuned_model.pkl",
@@ -202,6 +202,42 @@
       "sha256": "3ffdeff34bbdf3266aee5b0a3cddf8420e52472e77230dfbb312a2c90f90cdcb"
     },
     {
+      "path": "results/phase12_time_validation.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 12 time-bucket diagnostic table",
+      "status": "present",
+      "size_bytes": 4784,
+      "sha256": "e001b0bd6a8893dae6e73a8c86cc3b42c20ef391a005014ea7a4ceac4227ca51"
+    },
+    {
+      "path": "results/phase12_time_validation.md",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 12 time-based validation report",
+      "status": "present",
+      "size_bytes": 6053,
+      "sha256": "379ed72cd26693070b52e2e3cbe9a659ca68e3269053246dce18bf35147bee56"
+    },
+    {
+      "path": "results/phase12_summary.json",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 12 diagnostic summary",
+      "status": "present",
+      "size_bytes": 1965,
+      "sha256": "c648ace415e565b3aa89f35f8b21341a65543d260eb135ed94a978a43ef09f85"
+    },
+    {
+      "path": "results/phase12_plots/time_bucket_pr_auc.png",
+      "group": "evaluation",
+      "required": false,
+      "description": "Phase 12 time-bucket PR-AUC plot",
+      "status": "present",
+      "size_bytes": 76487,
+      "sha256": "82387c5a3300a69d24dcc6a5ef03a22f6824b902e78946f99f7fd8a7738438ee"
+    },
+    {
       "path": "results/improvement_comparison.csv",
       "group": "evaluation",
       "required": false,
@@ -329,8 +365,8 @@
     }
   ],
   "summary": {
-    "total": 36,
-    "present": 36,
+    "total": 40,
+    "present": 40,
     "missing": 0,
     "missing_required": []
   },

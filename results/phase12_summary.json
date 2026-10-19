@@ -1,0 +1,42 @@
+{
+  "diagnostic": "time_bucket_stability_on_reserved_test_set",
+  "note": "The reserved test split is random and stratified, so time buckets share the training period. This measures temporal stability on unseen rows, not a strict forward-in-time holdout. A full forward-in-time retrain is deferred because the current 8 GB environment cannot hold the training matrix (~1.2 GB) plus a model.",
+  "n_buckets": 5,
+  "threshold": 0.35,
+  "rows": 118108,
+  "models": [
+    "SGD (Phase 5)",
+    "Random Forest (Phase 6)",
+    "Gradient Boosting (Phase 6)",
+    "XGBoost (Phase 6)",
+    "Tuned Random Forest (final)"
+  ],
+  "first_last": {
+    "SGD (Phase 5)": {
+      "pr_auc_earliest_bucket": 0.2410877128945264,
+      "pr_auc_latest_bucket": 0.22700725380421605,
+      "absolute_change_latest_minus_earliest": -0.01408045909031036
+    },
+    "Random Forest (Phase 6)": {
+      "pr_auc_earliest_bucket": 0.644481331929353,
+      "pr_auc_latest_bucket": 0.7255071726049682,
+      "absolute_change_latest_minus_earliest": 0.08102584067561525
+    },
+    "Gradient Boosting (Phase 6)": {
+      "pr_auc_earliest_bucket": 0.2594261626318364,
+      "pr_auc_latest_bucket": 0.34593185296292206,
+      "absolute_change_latest_minus_earliest": 0.08650569033108568
+    },
+    "XGBoost (Phase 6)": {
+      "pr_auc_earliest_bucket": 0.49088052090151213,
+      "pr_auc_latest_bucket": 0.5441351132060125,
+      "absolute_change_latest_minus_earliest": 0.05325459230450036
+    },
+    "Tuned Random Forest (final)": {
+      "pr_auc_earliest_bucket": 0.6547293146133872,
+      "pr_auc_latest_bucket": 0.7234804087703894,
+      "absolute_change_latest_minus_earliest": 0.0687510941570022
+    }
+  },
+  "prevalence_caveat": "The earliest bucket has a lower fraud rate than the middle buckets (see phase12_time_validation.csv). PR-AUC is prevalence-sensitive, so part of the earliest-bucket gap is compositional rather than temporal degradation."
+}

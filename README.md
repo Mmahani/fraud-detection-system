@@ -1,5 +1,7 @@
 # Fraud Detection System — IEEE-CIS
 
+[![CI](https://github.com/Mmahani/fraud-detection-system/actions/workflows/ci.yml/badge.svg)](https://github.com/Mmahani/fraud-detection-system/actions/workflows/ci.yml)
+
 End-to-end machine learning project for credit-card fraud detection using the
 [IEEE-CIS Fraud Detection](https://www.kaggle.com/c/ieee-fraud-detection) dataset.
 
@@ -110,9 +112,13 @@ fraud-detection-system/
 │   ├── test_metrics.py
 │   ├── test_artifacts.py
 │   └── test_api.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # lint + unit tests
 ├── .gitignore
 ├── README.md
-└── requirements.txt
+├── requirements.txt
+└── requirements-ci.txt
 ```
 
 Only the final inference artifacts are intended to be tracked in Git:
@@ -455,6 +461,10 @@ The suite covers the canonical metrics, input validation, manifest generation,
 manifest validation, and the REST API (health, model info, single and batch
 prediction, validation errors, and SHAP explanation).
 
+GitHub Actions runs `.github/workflows/ci.yml` on pushes and pull requests to
+`main`. It installs `requirements-ci.txt`, runs `ruff`, and executes the
+`unittest` suite.
+
 ---
 
 ## Known limitations
@@ -476,9 +486,9 @@ prediction, validation errors, and SHAP explanation).
   cannot replace a strict forward-in-time retrain, which is still pending.
 - The test set has been reused across phases and is not a pristine holdout.
 - The probabilities are not calibrated; risk bands are heuristic.
-- There is no CI pipeline or model card yet. The API has no authentication,
-  rate limiting, or TLS and should run behind a gateway in production. A
-  `unittest` suite covers the metrics module, artifact manifest, and API.
+- There is no model card yet. CI runs lint and unit tests, but there is no
+  deployment pipeline. The API has no authentication, rate limiting, or TLS and
+  should run behind a gateway in production.
 - `models/xgboost.pkl` requires the optional `xgboost` package.
 
 ---

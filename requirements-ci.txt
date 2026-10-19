@@ -1,0 +1,17 @@
+# Minimal dependency set for CI: lint, unit tests, and the FastAPI service.
+# The notebook, xgboost, and visualization stacks are intentionally omitted.
+
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.9.0
+joblib==1.5.3
+
+shap==0.54.1
+matplotlib==3.10.9
+
+fastapi>=0.140,<1
+httpx>=0.28,<1
+
+pytest>=8.0,<9
+ruff>=0.6,<1

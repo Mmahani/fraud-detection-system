@@ -1,0 +1,7 @@
+{
+  "method": "SHAP TreeExplainer",
+  "model_file": "models/best_tuned_model.pkl",
+  "feature_importance_file": "results/shap_global_importance.csv",
+  "local_explanations_file": "results/shap_local_explanations.csv",
+  "top_n_default": 3
+}

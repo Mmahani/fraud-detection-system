@@ -1,0 +1,16 @@
+{
+  "model": "RandomForestClassifier",
+  "imbalance_strategy": "Balanced",
+  "best_parameters": {
+    "n_estimators": 20,
+    "min_samples_split": 5,
+    "min_samples_leaf": 2,
+    "max_features": 0.5,
+    "max_depth": null
+  },
+  "primary_metric": "average_precision",
+  "search_cv": 3,
+  "final_validation_cv": 5,
+  "random_state": 42,
+  "test_used_only_for_final_evaluation": true
+}

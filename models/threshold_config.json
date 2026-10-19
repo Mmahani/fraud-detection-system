@@ -1,0 +1,12 @@
+{
+  "classification_threshold": 0.35,
+  "risk_levels": {
+    "low": "probability < 0.30",
+    "medium": "0.30 <= probability < 0.70",
+    "high": "probability >= 0.70"
+  },
+  "selection_metric": "OOF simulated cost with COST_FP=1 and COST_FN=5; F1 used as tie-break",
+  "cost_fp": 1,
+  "cost_fn": 5,
+  "threshold_selected_without_test_data": true
+}

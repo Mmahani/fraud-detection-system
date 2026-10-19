@@ -1,0 +1,14 @@
+{
+  "model_type": "RandomForestClassifier",
+  "model_file": "models/best_tuned_model.pkl",
+  "preprocessor_file": "models/preprocessor.pkl",
+  "feature_count": 495,
+  "threshold": 0.35,
+  "risk_configuration": {
+    "low": "probability < 0.30",
+    "medium": "0.30 <= probability < 0.70",
+    "high": "probability >= 0.70"
+  },
+  "training_version": "Phase 8 tuned model; Phase 9 threshold; Phase 10 SHAP artifacts",
+  "explainability_available": true
+}

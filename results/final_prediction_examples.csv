@@ -1,0 +1,11 @@
+TransactionID,Fraud_Probability,Classification_Threshold,Prediction,Risk_Level,Top_Fraud_Factor_1,Top_Fraud_Factor_2,Top_Fraud_Factor_3
+2987000,0.08947368421052632,0.35,Legitimate,Low,numeric__V317=0.055064,numeric__V294=0.044388,low_cardinality__card6_credit=0.034953
+2987001,0.13833803258145363,0.35,Legitimate,Low,,,
+2987002,0.0,0.35,Legitimate,Low,,,
+2987003,0.0,0.35,Legitimate,Low,,,
+2987004,0.14095114345114346,0.35,Legitimate,Low,,,
+2987005,0.0,0.35,Legitimate,Low,,,
+2987006,0.0,0.35,Legitimate,Low,,,
+2987007,0.04852941176470588,0.35,Legitimate,Low,,,
+2987008,0.04642857142857143,0.35,Legitimate,Low,,,
+2987009,0.0,0.35,Legitimate,Low,,,

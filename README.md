@@ -8,6 +8,7 @@ preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
 > **Current status:** Phase 11 model artifacts are available and inference works.
+> PR-AUC is unified on Average Precision, and an artifact manifest is available.
 > Engineering hardening (API, automated tests, CI/CD, final documentation) is in
 > progress. See [Known limitations](#known-limitations).
 
@@ -23,6 +24,8 @@ optimization, SHAP explainability, and model packaging.
 - [Quick start](#quick-start)
 - [Notebook workflow](#notebook-workflow)
 - [Reproducibility notes](#reproducibility-notes)
+- [Artifact manifest](#artifact-manifest)
+- [Testing](#testing)
 - [Known limitations](#known-limitations)
 - [Data and license](#data-and-license)
 
@@ -83,9 +86,19 @@ fraud-detection-system/
 │   ├── 09_threshold_optimization.ipynb
 │   ├── 10_shap_explainability.ipynb
 │   └── 11_final_model_packaging.ipynb
+├── artifacts/
+│   └── manifest.json        # artifact inventory and SHA-256 hashes
 ├── results/                 # metrics, reports and plots
+├── scripts/
+│   └── audit_metrics.py     # PR-AUC definition audit
 ├── src/
-│   └── prediction.py        # inference and explanation utilities
+│   ├── prediction.py        # inference and explanation utilities
+│   └── fraud/
+│       ├── metrics.py       # canonical evaluation metrics (AP for PR-AUC)
+│       └── artifacts.py     # manifest build/validate CLI
+├── tests/
+│   ├── test_metrics.py
+│   └── test_artifacts.py
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -154,11 +167,12 @@ At threshold 0.50, for comparison:
 | Recall | 0.636584 |
 | F1 | 0.691822 |
 
-> **Metric definition:** all PR-AUC values in this repository should be read as
-> **Average Precision** (`sklearn.metrics.average_precision_score`). Earlier
-> notebooks used trapezoidal PR-AUC (`auc(recall, precision)`), which produces
-> slightly different numbers. Do not compare PR-AUC across phases unless the
-> implementation is identical.
+> **Metric definition:** all PR-AUC values in this repository are **Average
+> Precision** (`src.fraud.metrics.pr_auc`), not the trapezoidal
+> `auc(recall, precision)` variant. Phase 5/6 historical values were
+> trapezoidal and are not directly comparable. See
+> [`results/metrics_definition_audit.md`](results/metrics_definition_audit.md)
+> for recomputed values and the exact difference.
 
 The test set has been evaluated in several phases. The values above are therefore
 retrospective and should not be treated as a pristine final holdout.
@@ -274,10 +288,50 @@ and is not used for inference.
 
 ---
 
+## Artifact manifest
+
+`artifacts/manifest.json` records the inference, evaluation, explainability,
+and processed-data artifacts with sizes and SHA-256 hashes.
+
+Build the manifest after changing any tracked artifact:
+
+```powershell
+python -m src.fraud.artifacts build
+```
+
+Validate the current checkout:
+
+```powershell
+python -m src.fraud.artifacts validate
+```
+
+Required artifacts must exist and match their hashes. Optional artifacts
+(processed data and the incomplete Phase 10 CSV files) are reported as warnings
+rather than hard failures.
+
+---
+
+## Testing
+
+Run the standard-library test suite from the project root:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+The suite covers the canonical metrics, input validation, manifest generation,
+and manifest validation.
+
+---
+
 ## Known limitations
 
 - The notebooks now resolve the project root from the current working directory,
   but they have not been re-executed end-to-end after that change.
+- Notebooks 05 and 06 now call `src.fraud.metrics.pr_auc`, but their stored
+  outputs were produced with the historical trapezoidal PR-AUC and should be
+  refreshed by rerunning the notebooks.
+- The PR-AUC audit does not include XGBoost because `xgboost` is not installed.
 - Phase 10 CSV artifacts referenced by `models/explainability_config.json` are
   missing from `results/`.
 - The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so
@@ -286,7 +340,8 @@ and is not used for inference.
   among the most important SHAP features, so temporal leakage is possible.
 - The test set has been reused across phases and is not a pristine holdout.
 - The probabilities are not calibrated; risk bands are heuristic.
-- There is no API, automated test suite, CI pipeline, or model card yet.
+- There is no API, CI pipeline, or model card yet. A small `unittest` suite
+  covers the metrics module and artifact manifest.
 - `models/xgboost.pkl` requires the optional `xgboost` package.
 
 ---

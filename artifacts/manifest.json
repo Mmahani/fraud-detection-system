@@ -1,0 +1,348 @@
+{
+  "schema_version": 1,
+  "project": "fraud-detection-system",
+  "generated_at": "2026-10-19T16:03:15Z",
+  "files": [
+    {
+      "path": "models/best_tuned_model.pkl",
+      "group": "inference",
+      "required": true,
+      "description": "Final tuned RandomForestClassifier",
+      "status": "present",
+      "size_bytes": 33035241,
+      "sha256": "73255f4e42fcc65b498e4d5f460ee40e56ca0c08fa767caf992628e3fb4dc322"
+    },
+    {
+      "path": "models/preprocessor.pkl",
+      "group": "inference",
+      "required": true,
+      "description": "Fitted preprocessing pipeline used by inference",
+      "status": "present",
+      "size_bytes": 95825,
+      "sha256": "de8d1e87ea9cb51c77b6a2a74fb311039da1e7726801157d643c6ceb0b3e07d4"
+    },
+    {
+      "path": "models/threshold_config.json",
+      "group": "inference",
+      "required": true,
+      "description": "Frozen classification threshold and risk bands",
+      "status": "present",
+      "size_bytes": 348,
+      "sha256": "5da863c4bcbe8b0ad09fda0f2231cd8d3bb1772977a411ce50920578a1c02b62"
+    },
+    {
+      "path": "models/model_metadata.json",
+      "group": "inference",
+      "required": true,
+      "description": "Model metadata used by packaging and reporting",
+      "status": "present",
+      "size_bytes": 453,
+      "sha256": "c1919dc50dac0aec1bb8106e86f712496bdc2a8cfc152650ba4563e5f6a7cb38"
+    },
+    {
+      "path": "models/explainability_config.json",
+      "group": "inference",
+      "required": true,
+      "description": "SHAP explainability configuration",
+      "status": "present",
+      "size_bytes": 240,
+      "sha256": "e211b43f178c78558570846c9f203fbbd1b910fbf181885d91299256f11f5a14"
+    },
+    {
+      "path": "results/final_threshold_test_results.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Frozen-threshold test metrics",
+      "status": "present",
+      "size_bytes": 270,
+      "sha256": "5fb942de470df21a8d0af5aee2cf03f0399f2155edea118040378193c90ff7f3"
+    },
+    {
+      "path": "results/phase8_fast_summary.json",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 8 CV and test summary",
+      "status": "present",
+      "size_bytes": 1863,
+      "sha256": "bb8a27ac95d6eb634a76a56e7fdc36fc51454c8882ece3d450665ce2bc1992f7"
+    },
+    {
+      "path": "results/phase8_evaluation_audit.md",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 8 metric and leakage audit",
+      "status": "present",
+      "size_bytes": 3533,
+      "sha256": "e97f9e6b71864e350867358cd514adf87ab5992c79618b99a9d450a3fee075c5"
+    },
+    {
+      "path": "results/phase9_final_report.md",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 9 threshold report",
+      "status": "present",
+      "size_bytes": 2232,
+      "sha256": "b0347a907d207dcd2a6d8efd15b49342719d5cd065be322e056c65fff2e45c62"
+    },
+    {
+      "path": "results/best_model_parameters.json",
+      "group": "evaluation",
+      "required": true,
+      "description": "Selected model parameters and search metadata",
+      "status": "present",
+      "size_bytes": 385,
+      "sha256": "988eaa9490a445a02e417913e92b291b76dd8e5df382105be73f0f14f12bc437"
+    },
+    {
+      "path": "results/final_model_comparison_phase8.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Final model comparison table",
+      "status": "present",
+      "size_bytes": 472,
+      "sha256": "46e146c41977d4e4940ef1822dd0fea81ca320fb4959398d3edc70f83ad3f66e"
+    },
+    {
+      "path": "results/phase8_fast_report.md",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 8 narrative report",
+      "status": "present",
+      "size_bytes": 3584,
+      "sha256": "1990d846eeb4f64dd205e2108c70b9e7dd068e5dcac1e46f3a2db30627062767"
+    },
+    {
+      "path": "results/phase8_tuned_vs_untuned_test.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Tuned versus untuned test comparison",
+      "status": "present",
+      "size_bytes": 601,
+      "sha256": "585c559b110cfd9a1f017294be0faea63fd50f8ab39a2f951d76cf641cb5e8cd"
+    },
+    {
+      "path": "results/model_comparison.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 6 model comparison table",
+      "status": "present",
+      "size_bytes": 651,
+      "sha256": "5e2f57a50380d3f362f856e4683d3e6f86834f388110af52f43ec8423186f0e5"
+    },
+    {
+      "path": "results/hyperparameter_search_results.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 8 hyperparameter search results",
+      "status": "present",
+      "size_bytes": 2785,
+      "sha256": "b4ac4f50384ebab645ab849ee91eeb63f076ffca5f0c5140742c32dfe6428814"
+    },
+    {
+      "path": "results/threshold_analysis.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "OOF threshold analysis",
+      "status": "present",
+      "size_bytes": 1829,
+      "sha256": "b546fd3aa1c9f5180f70f7b8788e2ec974b76d1fd7002db897a0741a81ad3716"
+    },
+    {
+      "path": "results/threshold_constraints_oof.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "OOF threshold constraint checks",
+      "status": "present",
+      "size_bytes": 812,
+      "sha256": "101dce397099df961da97650ff5e3eb20549dc5b3985883f22c6058fe8fb2d1a"
+    },
+    {
+      "path": "results/threshold_050_vs_final_test.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Test comparison at thresholds 0.50 and 0.35",
+      "status": "present",
+      "size_bytes": 448,
+      "sha256": "e257489bdcb2894ac062b4c7aef7b407b457b4e2062a94e7310e8e869a4703c7"
+    },
+    {
+      "path": "results/threshold_sensitivity_test.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Threshold sensitivity analysis",
+      "status": "present",
+      "size_bytes": 724,
+      "sha256": "e8e4255a9b11975dd53156433cedff16a9da5224406a7dd7dcd1b527d94c4a0a"
+    },
+    {
+      "path": "results/final_prediction_examples.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Phase 11 prediction examples",
+      "status": "present",
+      "size_bytes": 648,
+      "sha256": "83f229088fb2ec3f74d3e4713a791fcd3383cdc9895a982930c5f5a5830f4d45"
+    },
+    {
+      "path": "results/metrics_definition_audit.md",
+      "group": "evaluation",
+      "required": true,
+      "description": "Audit of canonical versus historical PR-AUC definitions",
+      "status": "present",
+      "size_bytes": 2721,
+      "sha256": "5e34f73617c4baf26626b977dc13eb5ad49df20514e51891b5a8397356104bcb"
+    },
+    {
+      "path": "results/metrics_definition_audit.csv",
+      "group": "evaluation",
+      "required": true,
+      "description": "Machine-readable PR-AUC audit table",
+      "status": "present",
+      "size_bytes": 1037,
+      "sha256": "3ffdeff34bbdf3266aee5b0a3cddf8420e52472e77230dfbb312a2c90f90cdcb"
+    },
+    {
+      "path": "results/improvement_comparison.csv",
+      "group": "evaluation",
+      "required": false,
+      "description": "Archived Phase 8 improvement experiment; not the final model",
+      "status": "present",
+      "size_bytes": 555,
+      "sha256": "29d457ff652df512f77d9238ced6175dd25c52dbba7fd31e99c1f5d732b070a3"
+    },
+    {
+      "path": "results/oof_proba.npy",
+      "group": "evaluation",
+      "required": false,
+      "description": "OOF probabilities used for threshold selection; regenerate with Phase 9",
+      "status": "present",
+      "size_bytes": 3779584,
+      "sha256": "1813458e53340651fa3358636e28edd83d9cd459c826aa2db769df50b95015e6"
+    },
+    {
+      "path": "results/phase10_plots/shap_beeswarm.png",
+      "group": "explainability",
+      "required": false,
+      "description": "SHAP beeswarm plot",
+      "status": "present",
+      "size_bytes": 191261,
+      "sha256": "83918e97f502552268e0233b7596a50701aa0b2e05715f5f8791d15dd7dbb9e7"
+    },
+    {
+      "path": "results/phase10_plots/shap_global_bar.png",
+      "group": "explainability",
+      "required": false,
+      "description": "SHAP global bar plot",
+      "status": "present",
+      "size_bytes": 107470,
+      "sha256": "162e0a8517270e5bd9d22682397653359d9ca67bac4e18df7b370ed6e2ce9232"
+    },
+    {
+      "path": "results/shap_global_importance.csv",
+      "group": "explainability",
+      "required": false,
+      "description": "Global SHAP importance table (missing; regenerate Phase 10)",
+      "status": "missing",
+      "size_bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "results/shap_global_importance_top20.csv",
+      "group": "explainability",
+      "required": false,
+      "description": "Top-20 SHAP importance table (missing; regenerate Phase 10)",
+      "status": "missing",
+      "size_bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "results/shap_fraud_direction.csv",
+      "group": "explainability",
+      "required": false,
+      "description": "SHAP direction summary (missing; regenerate Phase 10)",
+      "status": "missing",
+      "size_bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "results/shap_local_explanations.csv",
+      "group": "explainability",
+      "required": false,
+      "description": "Local SHAP explanation examples (missing; regenerate Phase 10)",
+      "status": "missing",
+      "size_bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "results/phase10_final_report.md",
+      "group": "explainability",
+      "required": false,
+      "description": "Phase 10 report (missing; regenerate Phase 10)",
+      "status": "missing",
+      "size_bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "data/processed/merged_data.csv.gz",
+      "group": "data",
+      "required": false,
+      "description": "Merged raw transaction and identity data",
+      "status": "present",
+      "size_bytes": 50278366,
+      "sha256": "23a45d9271159c6bffcd2aaaca9f7971dd9ac2c98aec512bbad84d845a54259c"
+    },
+    {
+      "path": "data/processed/X_train_processed.npz",
+      "group": "data",
+      "required": false,
+      "description": "Processed training feature matrix",
+      "status": "present",
+      "size_bytes": 112248004,
+      "sha256": "b947eae85b53c59aee6e3c88467064a0edd0dfd6715d69f95390f746928f5e1d"
+    },
+    {
+      "path": "data/processed/X_test_processed.npz",
+      "group": "data",
+      "required": false,
+      "description": "Processed test feature matrix",
+      "status": "present",
+      "size_bytes": 28058721,
+      "sha256": "96bea862678373e118de4ee578af03e893c0a69d6463c50c6121f705b054d277"
+    },
+    {
+      "path": "data/processed/y_train.csv",
+      "group": "data",
+      "required": false,
+      "description": "Training labels",
+      "status": "present",
+      "size_bytes": 1417305,
+      "sha256": "fa5c65931b8405a35eebaeebb6bc0f0bd9f0711560a7ee18b916abad30bdcd80"
+    },
+    {
+      "path": "data/processed/y_test.csv",
+      "group": "data",
+      "required": false,
+      "description": "Test labels",
+      "status": "present",
+      "size_bytes": 354333,
+      "sha256": "b65b8964bb42caecb25d50d8b6946badb6d86e42a3f3f6fc805ebe42ff26da54"
+    }
+  ],
+  "summary": {
+    "total": 36,
+    "present": 31,
+    "missing": 5,
+    "missing_required": []
+  },
+  "environment": {
+    "python": "3.12.6",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.3",
+      "scipy": "1.17.1",
+      "scikit-learn": "1.8.0",
+      "joblib": "1.5.3"
+    }
+  }
+}

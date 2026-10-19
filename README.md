@@ -276,11 +276,8 @@ and is not used for inference.
 
 ## Known limitations
 
-- Several notebooks (`08_imbalance_and_tuning`, `09_threshold_optimization`,
-  `10_shap_explainability`, `11_final_model_packaging`) still contain hard-coded
-  paths to the old project location.
-- `11_final_model_packaging.ipynb` contains an invalid Windows string literal and
-  currently fails with a `SyntaxError`.
+- The notebooks now resolve the project root from the current working directory,
+  but they have not been re-executed end-to-end after that change.
 - Phase 10 CSV artifacts referenced by `models/explainability_config.json` are
   missing from `results/`.
 - The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so

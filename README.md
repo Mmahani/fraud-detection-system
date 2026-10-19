@@ -9,12 +9,11 @@ The project covers data integration, exploratory analysis, leakage-safe
 preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
-> **Current status:** Phase 10 and Phase 11 artifacts are available, a
-> Phase 12 time-based validation diagnostic has been added, and the Phase 13
-> REST API is available. Inference, SHAP explainability, the canonical PR-AUC
-> metric, and the artifact manifest are complete. Engineering hardening
-> (CI/CD, final documentation) is in progress. See
-> [Known limitations](#known-limitations).
+> **Current status:** Phase 10–13 artifacts are available: SHAP explanations,
+> the canonical PR-AUC metric, a time-based validation diagnostic, and a REST
+> API. Unit tests, lint, and GitHub Actions CI are in place, and a model card
+> documents intended use and limitations. Deployment packaging and ongoing
+> monitoring remain future work. See [Known limitations](#known-limitations).
 
 ---
 
@@ -23,6 +22,7 @@ optimization, SHAP explainability, and model packaging.
 - [Dataset](#dataset)
 - [Repository structure](#repository-structure)
 - [Final model](#final-model)
+- [Model card](#model-card)
 - [Results](#results)
 - [Explainability](#explainability)
 - [Installation](#installation)
@@ -116,6 +116,7 @@ fraud-detection-system/
 │   └── workflows/
 │       └── ci.yml           # lint + unit tests
 ├── .gitignore
+├── MODEL_CARD.md
 ├── README.md
 ├── requirements.txt
 └── requirements-ci.txt
@@ -158,6 +159,13 @@ Risk levels are presentation bands, not the classification threshold:
 - Low: `probability < 0.30`
 - Medium: `0.30 <= probability < 0.70`
 - High: `probability >= 0.70`
+
+---
+
+## Model card
+
+See [MODEL_CARD.md](MODEL_CARD.md) for intended use, factors, metrics, training
+and evaluation data, ethical considerations, and operational limitations.
 
 ---
 
@@ -486,9 +494,9 @@ GitHub Actions runs `.github/workflows/ci.yml` on pushes and pull requests to
   cannot replace a strict forward-in-time retrain, which is still pending.
 - The test set has been reused across phases and is not a pristine holdout.
 - The probabilities are not calibrated; risk bands are heuristic.
-- There is no model card yet. CI runs lint and unit tests, but there is no
-  deployment pipeline. The API has no authentication, rate limiting, or TLS and
-  should run behind a gateway in production.
+- CI runs lint and unit tests, but there is no deployment pipeline or container
+  image. The API has no authentication, rate limiting, or TLS and should run
+  behind a gateway in production.
 - `models/xgboost.pkl` requires the optional `xgboost` package.
 
 ---

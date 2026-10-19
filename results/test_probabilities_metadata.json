@@ -1,0 +1,68 @@
+{
+  "_note": "The .npy probability arrays are local-only and ignored by Git. They were generated from the listed model files under scikit-learn 1.9.0; regenerate them by loading the models and predicting on X_test_processed.npz.",
+  "rf": {
+    "model": "Random Forest",
+    "model_file": "models/random_forest.pkl",
+    "probability_file": "results/test_proba_rf.npy",
+    "shape": [
+      118108
+    ],
+    "dtype": "float64",
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.05712957631997833,
+    "average_precision": 0.7224630422250053,
+    "roc_auc": 0.94051273867316,
+    "sklearn_version": "1.9.0",
+    "warnings": []
+  },
+  "gb": {
+    "model": "Gradient Boosting",
+    "model_file": "models/gradient_boosting.pkl",
+    "probability_file": "results/test_proba_gb.npy",
+    "shape": [
+      118108
+    ],
+    "dtype": "float64",
+    "min": 0.02773426494194877,
+    "max": 0.8418078513304988,
+    "mean": 0.03566446094122312,
+    "average_precision": 0.34313683058794475,
+    "roc_auc": 0.7891038170563359,
+    "sklearn_version": "1.9.0",
+    "warnings": []
+  },
+  "xgb": {
+    "model": "XGBoost",
+    "model_file": "models/xgboost.pkl",
+    "probability_file": "results/test_proba_xgb.npy",
+    "shape": [
+      118108
+    ],
+    "dtype": "float64",
+    "min": 0.01626601070165634,
+    "max": 0.9946079254150391,
+    "mean": 0.27680755883446634,
+    "average_precision": 0.5734568342621466,
+    "roc_auc": 0.909752556833817,
+    "sklearn_version": "1.9.0",
+    "warnings": []
+  },
+  "sgd": {
+    "model": "SGD",
+    "model_file": "models/baseline_sgd.pkl",
+    "probability_file": "results/test_proba_sgd.npy",
+    "shape": [
+      118108
+    ],
+    "dtype": "float64",
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.09266635667246144,
+    "average_precision": 0.286753034303506,
+    "roc_auc": 0.8606540395418893,
+    "sklearn_version": "1.9.0",
+    "warnings": [],
+    "training_time_seconds": 235.4203758239746
+  }
+}

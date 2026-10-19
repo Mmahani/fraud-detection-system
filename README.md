@@ -340,8 +340,13 @@ python -m src.fraud.artifacts validate
 ```
 
 Required artifacts must exist and match their hashes. Optional artifacts
-(processed data and the incomplete Phase 10 CSV files) are reported as warnings
-rather than hard failures.
+(processed data and other optional files) are reported as warnings rather than
+hard failures.
+
+Local-only test probability arrays for the Phase 6 models are stored as
+`results/test_proba_{sgd,rf,gb,xgb}.npy` and are ignored by Git. Their shapes,
+library versions, and canonical Average Precision values are recorded in
+`results/test_probabilities_metadata.json`.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "fraud-detection-system",
-  "generated_at": "2026-10-19T16:03:15Z",
+  "generated_at": "2026-10-19T16:50:38Z",
   "files": [
     {
       "path": "models/best_tuned_model.pkl",
@@ -225,8 +225,8 @@
       "required": false,
       "description": "SHAP beeswarm plot",
       "status": "present",
-      "size_bytes": 191261,
-      "sha256": "83918e97f502552268e0233b7596a50701aa0b2e05715f5f8791d15dd7dbb9e7"
+      "size_bytes": 172353,
+      "sha256": "5d62df4ee4568f0211b40fb86059a2a1acf10efd3aeb1aea55a9ff094ad78267"
     },
     {
       "path": "results/phase10_plots/shap_global_bar.png",
@@ -234,53 +234,53 @@
       "required": false,
       "description": "SHAP global bar plot",
       "status": "present",
-      "size_bytes": 107470,
-      "sha256": "162e0a8517270e5bd9d22682397653359d9ca67bac4e18df7b370ed6e2ce9232"
+      "size_bytes": 85725,
+      "sha256": "84e1f8f41ce28d41188273541816549a5ceda0595b2b9ddb2d2117676b3f3134"
     },
     {
       "path": "results/shap_global_importance.csv",
       "group": "explainability",
       "required": false,
       "description": "Global SHAP importance table (missing; regenerate Phase 10)",
-      "status": "missing",
-      "size_bytes": null,
-      "sha256": null
+      "status": "present",
+      "size_bytes": 21344,
+      "sha256": "272fa47da3314f3161b4185e75bd50bd5338d7a540c42b543e54c65a111da834"
     },
     {
       "path": "results/shap_global_importance_top20.csv",
       "group": "explainability",
       "required": false,
       "description": "Top-20 SHAP importance table (missing; regenerate Phase 10)",
-      "status": "missing",
-      "size_bytes": null,
-      "sha256": null
+      "status": "present",
+      "size_bytes": 818,
+      "sha256": "ae4a492ebad85badfc985badbac540f177d85e9572441f2567c87defb0c23f25"
     },
     {
       "path": "results/shap_fraud_direction.csv",
       "group": "explainability",
       "required": false,
       "description": "SHAP direction summary (missing; regenerate Phase 10)",
-      "status": "missing",
-      "size_bytes": null,
-      "sha256": null
+      "status": "present",
+      "size_bytes": 32367,
+      "sha256": "cb8ba74300d60186d5ed205d275e884933e831f476ca868380172d323c0141af"
     },
     {
       "path": "results/shap_local_explanations.csv",
       "group": "explainability",
       "required": false,
       "description": "Local SHAP explanation examples (missing; regenerate Phase 10)",
-      "status": "missing",
-      "size_bytes": null,
-      "sha256": null
+      "status": "present",
+      "size_bytes": 2387,
+      "sha256": "d73ddeee18eaba4e181942e8f43c8a500b5a8b837b999ce74a3d4e7d895a2f7f"
     },
     {
       "path": "results/phase10_final_report.md",
       "group": "explainability",
       "required": false,
       "description": "Phase 10 report (missing; regenerate Phase 10)",
-      "status": "missing",
-      "size_bytes": null,
-      "sha256": null
+      "status": "present",
+      "size_bytes": 2201,
+      "sha256": "41ca5aaf84bc0554fe6ef729e6258be4b27e67659e589db7ca900c2c9b180ad7"
     },
     {
       "path": "data/processed/merged_data.csv.gz",
@@ -330,8 +330,8 @@
   ],
   "summary": {
     "total": 36,
-    "present": 31,
-    "missing": 5,
+    "present": 36,
+    "missing": 0,
     "missing_required": []
   },
   "environment": {

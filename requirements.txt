@@ -25,6 +25,7 @@ xgboost==3.4.1
 jupyter>=1.1,<2
 notebook>=7.0,<8
 nbconvert>=7.0,<8
+ipykernel>=7.0,<8
 
 # --- API (Phase 12) ---
 fastapi>=0.140,<1

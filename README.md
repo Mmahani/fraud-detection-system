@@ -7,9 +7,9 @@ The project covers data integration, exploratory analysis, leakage-safe
 preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
-> **Current status:** Phase 11 model artifacts are available and inference works.
-> PR-AUC is unified on Average Precision, and an artifact manifest is available.
-> Engineering hardening (API, automated tests, CI/CD, final documentation) is in
+> **Current status:** Phase 10 and Phase 11 artifacts are available. Inference,
+> SHAP explainability, the canonical PR-AUC metric, and the artifact manifest
+> are complete. Engineering hardening (API, CI/CD, final documentation) is in
 > progress. See [Known limitations](#known-limitations).
 
 ---
@@ -20,6 +20,7 @@ optimization, SHAP explainability, and model packaging.
 - [Repository structure](#repository-structure)
 - [Final model](#final-model)
 - [Results](#results)
+- [Explainability](#explainability)
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [Notebook workflow](#notebook-workflow)
@@ -179,6 +180,39 @@ retrospective and should not be treated as a pristine final holdout.
 
 ---
 
+## Explainability
+
+Phase 10 is complete. SHAP values were computed for a reproducible sample of
+500 training transactions using `shap.TreeExplainer` on the frozen Random
+Forest. The class-1 additivity mean absolute error is `0.00001165`.
+
+Top global features by mean absolute SHAP value:
+
+| Rank | Feature | Mean absolute SHAP |
+|---:|---|---:|
+| 1 | `numeric__V258` | 0.038334 |
+| 2 | `numeric__C1` | 0.023560 |
+| 3 | `numeric__C13` | 0.021904 |
+| 4 | `numeric__C14` | 0.021781 |
+| 5 | `numeric__TransactionAmt` | 0.020680 |
+| 6 | `numeric__TransactionDT` | 0.018603 |
+
+Full artifacts:
+
+- `results/shap_global_importance.csv`
+- `results/shap_global_importance_top20.csv`
+- `results/shap_fraud_direction.csv`
+- `results/shap_local_explanations.csv`
+- `results/phase10_final_report.md`
+- `results/phase10_plots/shap_global_bar.png`
+- `results/phase10_plots/shap_beeswarm.png`
+
+SHAP values describe model associations, not causal effects. The presence of
+`TransactionDT` among the top features reinforces the need for the planned
+time-based validation.
+
+---
+
 ## Installation
 
 Tested with Python 3.12.6 on Windows.
@@ -326,14 +360,12 @@ and manifest validation.
 
 ## Known limitations
 
-- The notebooks now resolve the project root from the current working directory,
-  but they have not been re-executed end-to-end after that change.
+- Notebook 10 has been re-executed end-to-end after the path changes. The
+  remaining notebooks have not.
 - Notebooks 05 and 06 now call `src.fraud.metrics.pr_auc`, but their stored
   outputs were produced with the historical trapezoidal PR-AUC and should be
   refreshed by rerunning the notebooks.
 - The PR-AUC audit does not include XGBoost because `xgboost` is not installed.
-- Phase 10 CSV artifacts referenced by `models/explainability_config.json` are
-  missing from `results/`.
 - The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so
   overfitting remains a concern.
 - The current split is random and stratified, not time-based; `TransactionDT` is

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "fraud-detection-system",
-  "generated_at": "2026-10-19T16:50:38Z",
+  "generated_at": "2026-10-19T19:45:54Z",
   "files": [
     {
       "path": "models/best_tuned_model.pkl",
@@ -126,8 +126,8 @@
       "required": true,
       "description": "Phase 6 model comparison table",
       "status": "present",
-      "size_bytes": 651,
-      "sha256": "5e2f57a50380d3f362f856e4683d3e6f86834f388110af52f43ec8423186f0e5"
+      "size_bytes": 648,
+      "sha256": "db770a1b39742e3ccb1e3e62baeb8bab31f060fcaa5608f3bc3ecd6153c17c24"
     },
     {
       "path": "results/hyperparameter_search_results.csv",
@@ -341,7 +341,7 @@
       "numpy": "2.4.6",
       "pandas": "3.0.3",
       "scipy": "1.17.1",
-      "scikit-learn": "1.8.0",
+      "scikit-learn": "1.9.0",
       "joblib": "1.5.3"
     }
   }

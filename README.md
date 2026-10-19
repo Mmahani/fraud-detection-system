@@ -170,10 +170,28 @@ At threshold 0.50, for comparison:
 
 > **Metric definition:** all PR-AUC values in this repository are **Average
 > Precision** (`src.fraud.metrics.pr_auc`), not the trapezoidal
-> `auc(recall, precision)` variant. Phase 5/6 historical values were
-> trapezoidal and are not directly comparable. See
-> [`results/metrics_definition_audit.md`](results/metrics_definition_audit.md)
-> for recomputed values and the exact difference.
+> `auc(recall, precision)` variant. The Phase 5 and Phase 6 notebook outputs use
+> this canonical definition. The historical trapezoidal numbers are retained only
+> in [`results/metrics_definition_audit.md`](results/metrics_definition_audit.md)
+> for traceability.
+
+### Phase 6 model comparison
+
+Canonical Average Precision on the fixed test set. Random Forest leads on PR-AUC,
+while XGBoost and SGD trade precision for recall:
+
+| Model | PR-AUC | F1 | ROC-AUC | FP | FN |
+|---|---:|---:|---:|---:|---:|
+| Random Forest | 0.722463 | 0.663877 | 0.940513 | 337 | 1,912 |
+| XGBoost | 0.573457 | 0.306512 | 0.909753 | 13,862 | 876 |
+| Gradient Boosting | 0.343137 | 0.221847 | 0.789104 | 75 | 3,608 |
+| SGD (Phase 5 baseline) | 0.286753 | 0.328110 | 0.860654 | 8,458 | 1,662 |
+
+Full comparison: [`results/model_comparison.csv`](results/model_comparison.csv).
+The metric outputs in notebook 06 were refreshed from the saved test
+probabilities under `scikit-learn==1.9.0`; training times and feature
+importances remain from the historical run (a full retrain exceeded the 8 GB
+environment).
 
 The test set has been evaluated in several phases. The values above are therefore
 retrospective and should not be treated as a pristine final holdout.
@@ -366,10 +384,13 @@ and manifest validation.
 ## Known limitations
 
 - Notebooks 05 and 10 have been re-executed end-to-end after the path and metric
-  changes. The remaining notebooks have not.
-- Notebook 06 still stores historical trapezoidal PR-AUC outputs. Refreshing it
-  requires rerunning the full model comparison with sufficient RAM; the current
-  8 GB environment could not complete that run reliably.
+  changes. The Phase 6 metric outputs were refreshed from saved test
+  probabilities, but its training-time and feature-importance outputs remain
+  from the historical run. The other notebooks have not been re-executed
+  end-to-end.
+- A full Phase 6 training rerun is still pending because the current 8 GB
+  environment cannot complete it reliably. The saved test probability arrays let
+  the reported metrics be regenerated without retraining.
 - The PR-AUC audit does not include XGBoost because `xgboost` is not installed.
 - The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so
   overfitting remains a concern.

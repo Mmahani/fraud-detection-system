@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "fraud-detection-system",
-  "generated_at": "2026-10-19T20:27:18Z",
+  "generated_at": "2026-10-19T20:55:09Z",
   "files": [
     {
       "path": "models/best_tuned_model.pkl",
@@ -108,8 +108,8 @@
       "required": true,
       "description": "Phase 8 narrative report",
       "status": "present",
-      "size_bytes": 4442,
-      "sha256": "f74da2f9a7b98602d8f5f2f79c710d6f5aa3d1f9a1bcefa1f1a23df3bc8cc535"
+      "size_bytes": 4543,
+      "sha256": "5337675a6244c2b6a9b2c731fb231a963afc7bdd25feabfee57857c1cb90d50e"
     },
     {
       "path": "results/phase8_tuned_vs_untuned_test.csv",
@@ -189,8 +189,8 @@
       "required": true,
       "description": "Audit of canonical versus historical PR-AUC definitions",
       "status": "present",
-      "size_bytes": 2721,
-      "sha256": "5e34f73617c4baf26626b977dc13eb5ad49df20514e51891b5a8397356104bcb"
+      "size_bytes": 2966,
+      "sha256": "a0bd2b6d2cb637a58db2e4c9b405cb5df542ec4c547d0ad419f5e48280770ded"
     },
     {
       "path": "results/metrics_definition_audit.csv",
@@ -198,8 +198,8 @@
       "required": true,
       "description": "Machine-readable PR-AUC audit table",
       "status": "present",
-      "size_bytes": 1037,
-      "sha256": "3ffdeff34bbdf3266aee5b0a3cddf8420e52472e77230dfbb312a2c90f90cdcb"
+      "size_bytes": 1111,
+      "sha256": "bc2e8ce4cd6f837601816219449ee9c85c7f97609a483be8519edc3d0c7b7634"
     },
     {
       "path": "results/phase12_time_validation.csv",

@@ -19,13 +19,16 @@ for model selection or delivery claims.
 | test | Random Forest (untuned) | 0.722463 | 0.731103 | +0.008640 |
 | test | Random Forest (tuned) | 0.730519 | 0.732144 | +0.001625 |
 | test | Gradient Boosting | 0.343137 | 0.369340 | +0.026203 |
-| test | XGBoost (untuned) | n/a | n/a | n/a |
+| test | XGBoost (untuned) | 0.573457 | 0.573421 | -0.000036 |
 | train_oof | Random Forest (tuned) | 0.704879 | 0.706801 | +0.001923 |
 
 > Predictions are generated with a single worker (`n_jobs=1`) so that
 > floating-point summation order and Average Precision tie ordering are
-> deterministic. XGBoost is skipped when the optional `xgboost` package is not
-> installed.
+> deterministic. XGBoost values are computed from the saved test probabilities
+> under `scikit-learn==1.9.0`; `models/xgboost.pkl` still requires the optional
+> `xgboost` package at inference time. For XGBoost the trapezoidal value is
+> marginally below Average Precision; the two definitions still differ and must
+> not be mixed.
 
 ## Random Forest comparison
 
@@ -54,8 +57,8 @@ internally consistent; mixing the two definitions is not.
 - Label archived Phase 5/6 values explicitly as trapezoidal if they are quoted.
 - Do not compare a Phase 6 trapezoidal value directly with a Phase 8/9
   Average Precision value.
-- Notebooks 05 and 06 now call the canonical function; their stored outputs
-  predate this change and should be refreshed when the notebooks are rerun.
+- Notebooks 05 and 06 call the canonical function, and their stored outputs were
+  refreshed to Average Precision in the current snapshot.
 
 ## Source
 

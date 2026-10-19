@@ -9,11 +9,11 @@ The project covers data integration, exploratory analysis, leakage-safe
 preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
-> **Current status:** Phase 10–13 artifacts are available: SHAP explanations,
-> the canonical PR-AUC metric, a time-based validation diagnostic, and a REST
-> API. Unit tests, lint, and GitHub Actions CI are in place, and a model card
-> documents intended use and limitations. Deployment packaging and ongoing
-> monitoring remain future work. See [Known limitations](#known-limitations).
+> **Current status:** Phases 10–15 are complete: SHAP explanations, the canonical
+> PR-AUC metric, a time-based validation diagnostic, a REST API, CI, and a model
+> card documenting intended use and limitations. Deployment packaging and
+> ongoing monitoring remain future work. See
+> [Known limitations](#known-limitations).
 
 ---
 
@@ -485,9 +485,8 @@ GitHub Actions runs `.github/workflows/ci.yml` on pushes and pull requests to
 - A full Phase 6 training rerun is still pending because the current 8 GB
   environment cannot complete it reliably. The saved test probability arrays let
   the reported metrics be regenerated without retraining.
-- The PR-AUC audit does not include XGBoost because `xgboost` is not installed.
-- The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so
-  overfitting remains a concern.
+- The model shows a large train/test gap at the default 0.5 threshold (train F1
+  0.9569 vs test F1 0.6913), so overfitting remains a concern.
 - The current split is random and stratified, not time-based; `TransactionDT` is
   among the most important SHAP features, so temporal leakage is possible. The
   Phase 12 diagnostic checks temporal stability on the reserved holdout, but it

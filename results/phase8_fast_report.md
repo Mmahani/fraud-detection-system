@@ -30,7 +30,7 @@ The selected strategy was **`Balanced`**, based primarily on PR-AUC with F1 cons
 
 ## RandomizedSearchCV
 
-The search used 3 folds and 3 randomly selected parameter combinations, for 9 total fits. The actual search duration was **2785.52 seconds**.
+The search used 3 folds and 3 randomly selected parameter combinations, for 9 total fits. The stored notebook run reports a search duration of **2,295.39 seconds**; timings vary between runs and environments.
 
 | Parameter | Selected value |
 |---|---|
@@ -56,7 +56,7 @@ The tuned configuration was re-validated with 5-fold `StratifiedKFold` on the tr
 
 ## Final test evaluation
 
-The tuned model was retrained on the complete training set and then evaluated once on the untouched test set.
+The tuned model was retrained on the complete training set and then evaluated once on the reserved test split (not used during Phase 8 tuning).
 
 | Metric | Untuned Random Forest | Tuned Random Forest | Difference |
 |---|---:|---:|---:|

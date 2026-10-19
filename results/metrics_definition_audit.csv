@@ -3,5 +3,5 @@ test,Baseline SGD,models/baseline_sgd.pkl,118108,4133,0.286753034304,0.399749791
 test,Random Forest (untuned),models/random_forest.pkl,118108,4133,0.722463042225,0.731103178430,0.008640136205,Phase 6 historical PR-AUC 0.731103 was trapezoidal; Phase 8 uses AP
 test,Random Forest (tuned),models/best_tuned_model.pkl,118108,4133,0.730518680189,0.732143889848,0.001625209659,Final model; Phase 8/9 primary metric is Average Precision
 test,Gradient Boosting,models/gradient_boosting.pkl,118108,4133,0.343136830588,0.369339948321,0.026203117733,Phase 6 comparison model
-test,XGBoost (untuned),models/xgboost.pkl,118108,4133,,,,Skipped: xgboost is not installed
+test,XGBoost (untuned),models/xgboost.pkl,118108,4133,0.573456834262,0.573420659293,-0.000036174969,Phase 6 comparison model; computed from saved test probabilities
 train_oof,Random Forest (tuned),results/oof_proba.npy,472432,16530,0.704878707293,0.706801404015,0.001922696722,Out-of-fold training predictions used for threshold selection

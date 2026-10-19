@@ -21,6 +21,11 @@
 | Explainability | SHAP `TreeExplainer` (`shap==0.54.1`) |
 | Inference entry points | `src/prediction.py`, FastAPI service in `src/api/main.py` |
 
+The 434 required inputs include the two derived missingness flags
+(`DeviceInfo_is_missing`, `id_33_is_missing`). A client supplies 433 raw fields
+(or the raw `DeviceInfo` and `id_33` values), and the inference layer derives the
+flags.
+
 The model is a standalone estimator. Preprocessing is stored separately in
 `models/preprocessor.pkl` and must be loaded through `src.prediction` because the
 artifact references compatibility symbols. The preprocessing pipeline applies
@@ -87,6 +92,9 @@ Retrospective evaluation on the 118,108-row reserved test split:
 | PR-AUC (Average Precision) | **0.730518** |
 | TN / FP / FN / TP | 111,825 / 2,150 / 1,138 / 2,995 |
 
+PR-AUC and ROC-AUC are threshold-independent; precision, recall, F1, and the
+confusion-matrix counts are measured at 0.35.
+
 ### Threshold 0.50, for comparison
 
 | Metric | Value |
@@ -121,8 +129,8 @@ final model is reported separately at the frozen 0.35 threshold.
 | Gradient Boosting | 0.343137 | 0.221847 | 0.789104 |
 | SGD baseline | 0.286753 | 0.328110 | 0.860654 |
 
-The tuned final model reaches PR-AUC **0.730518** at threshold 0.35; see the
-frozen-threshold table above.
+The tuned final model reaches PR-AUC **0.730518**; its frozen operating
+threshold is 0.35. See the frozen-threshold table above.
 
 ### Time-bucket diagnostic
 
@@ -145,17 +153,21 @@ overlaps the training period.
 
 ### Training fit and overfitting diagnostic
 
-| Metric | Training | Test |
+Both columns use the default 0.5 prediction threshold used by `predict`, so they
+are directly comparable. The frozen 0.35 operating point is reported separately
+above.
+
+| Metric | Training (0.5) | Test (0.5) |
 |---|---:|---:|
-| Accuracy | 0.996850 | 0.972161 |
-| Balanced accuracy | 0.998368 | 0.852896 |
-| Precision | 0.917416 | 0.582119 |
-| Recall | 1.000000 | 0.724655 |
-| F1 | 0.956929 | 0.645613 |
+| Accuracy | 0.996850 | 0.980154 |
+| Balanced accuracy | 0.998368 | 0.813782 |
+| Precision | 0.917416 | 0.758601 |
+| Recall | 1.000000 | 0.634890 |
+| F1 | 0.956929 | 0.691254 |
 | ROC-AUC | 0.999998 | 0.937292 |
 | PR-AUC | 0.999923 | 0.730518 |
 
-The train/test F1 gap of about **0.266** is large. It is an overfitting
+The train/test F1 gap of about **0.2657** is large. It is an overfitting
 diagnostic, not an unbiased generalization estimate, because the training
 metrics are measured after fitting on all training rows.
 
@@ -246,6 +258,12 @@ Start the API:
 ```powershell
 python -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
 ```
+
+## License and data governance
+
+The repository does not declare a code license. The IEEE-CIS data is not
+redistributed; it remains subject to the Kaggle competition rules and dataset
+terms. See the README section [Data and license](README.md#data-and-license).
 
 ## References
 

@@ -360,11 +360,11 @@ and manifest validation.
 
 ## Known limitations
 
-- Notebook 10 has been re-executed end-to-end after the path changes. The
-  remaining notebooks have not.
-- Notebooks 05 and 06 now call `src.fraud.metrics.pr_auc`, but their stored
-  outputs were produced with the historical trapezoidal PR-AUC and should be
-  refreshed by rerunning the notebooks.
+- Notebooks 05 and 10 have been re-executed end-to-end after the path and metric
+  changes. The remaining notebooks have not.
+- Notebook 06 still stores historical trapezoidal PR-AUC outputs. Refreshing it
+  requires rerunning the full model comparison with sufficient RAM; the current
+  8 GB environment could not complete that run reliably.
 - The PR-AUC audit does not include XGBoost because `xgboost` is not installed.
 - The model shows a large train/test gap (train F1 0.9569 vs test F1 0.6913), so
   overfitting remains a concern.

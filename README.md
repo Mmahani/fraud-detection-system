@@ -2,128 +2,278 @@
 
 [![CI](https://github.com/Mmahani/fraud-detection-system/actions/workflows/ci.yml/badge.svg)](https://github.com/Mmahani/fraud-detection-system/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn 1.9.0](https://img.shields.io/badge/scikit--learn-1.9.0-F7931E?logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
 
-End-to-end machine learning project for credit-card fraud detection using the
-[IEEE-CIS Fraud Detection](https://www.kaggle.com/c/ieee-fraud-detection) dataset.
+**Explainable fraud detection on 590,540 IEEE-CIS transactions — from
+leakage-safe preprocessing to a local inference API.**
 
-The project covers data integration, exploratory analysis, leakage-safe
-preprocessing, baseline modeling, model comparison, validation, threshold
-optimization, SHAP explainability, and model packaging.
+This is a research project, not a production fraud system. It studies a
+rare-event ranking problem end to end: data integration, leakage-safe
+preprocessing, model comparison, threshold selection, SHAP explanations, and a
+tested FastAPI service.
 
-> **Current status:** Public research release candidate for `v1.0.1`. Phases 10–15
-> are complete: SHAP explanations, the canonical PR-AUC metric, a time-based
-> validation diagnostic, a REST API, CI, and a model card documenting intended
-> use and limitations. The code is MIT-licensed; the IEEE-CIS data is not
-> included. The model and API are **not approved for production use**. See
-> [Known limitations](#known-limitations) and [Data and license](#data-and-license).
+**At a glance:** 590,540 transactions · 3.4989% fraud · tuned Random Forest ·
+**0.730518** test PR-AUC · **0.704887 ± 0.008989** training-only 5-fold PR-AUC.
+
+**Portfolio:** [Case study](docs/CASE_STUDY.md) ·
+[Verified results](docs/RESULTS.md) · [LinkedIn/CV copy](docs/PORTFOLIO.md)
+
+> **Status:** research release candidate `v1.0.1`. The code and documentation are
+> MIT-licensed. The IEEE-CIS data is **not included**, and the trained model is
+> provided for research and education only. The model and API are **not approved
+> for production use**. See [Known limitations](#known-limitations) and
+> [Data and license](#data-and-license).
 
 ---
 
 ## Table of contents
 
-- [Dataset](#dataset)
-- [Repository structure](#repository-structure)
-- [Final model](#final-model)
-- [Model card](#model-card)
-- [Results](#results)
+- [The problem](#the-problem)
+- [The solution](#the-solution)
+- [Architecture](#architecture)
+- [Verified results](#verified-results)
 - [Explainability](#explainability)
-- [Installation](#installation)
+- [Tech stack](#tech-stack)
 - [Quick start](#quick-start)
-- [REST API](#rest-api)
-- [Notebook workflow](#notebook-workflow)
-- [Reproducibility notes](#reproducibility-notes)
-- [Artifact manifest](#artifact-manifest)
+- [API at a glance](#api-at-a-glance)
+- [Repository map](#repository-map)
+- [Documentation](#documentation)
+- [Model card](#model-card)
+- [Reproducibility](#reproducibility)
 - [Testing](#testing)
-- [Release notes](#release-notes)
 - [Known limitations](#known-limitations)
 - [Security](#security)
 - [Data and license](#data-and-license)
+- [Release notes](#release-notes)
 
 ---
 
-## Dataset
+## The problem
 
-The IEEE-CIS dataset contains anonymized e-commerce transactions. The raw and
-processed files are **not committed** to this repository: they are large, and the
-competition rules permit non-commercial use only and prohibit redistribution.
-Obtain the data from Kaggle and accept the competition rules before use; see
-[Data and license](#data-and-license).
+Only **3.4989%** of transactions in the IEEE-CIS dataset are fraudulent. A model
+can therefore report high accuracy while missing most fraud. The project treats
+fraud detection as a **ranking** problem:
 
-Place the following files in `data/raw/`:
+- which model ranks fraud highest under severe class imbalance;
+- how to preprocess without leaking test information;
+- where to place the decision threshold when a false negative is assumed to cost
+  more than a false positive;
+- how to explain an individual decision to a human reviewer;
+- how to make the artifact set reproducible and verifiable.
 
-```text
-data/raw/
-├── train_transaction.csv   (~651 MB)
-└── train_identity.csv      (~25 MB)
+The answers are documented with their limitations instead of being presented as
+production outcomes.
+
+## The solution
+
+An end-to-end, leakage-safe research pipeline:
+
+1. **Integrate** transaction and identity tables into 590,540 rows and 434
+   merged columns (432 model inputs plus the identifier and label).
+2. **Preprocess** with numeric, low-cardinality, and high-cardinality branches
+   fitted on training rows only; 495 transformed features.
+3. **Compare** an SGD baseline, Random Forest, Gradient Boosting, and XGBoost
+   under one evaluation function.
+4. **Tune** a 20-tree balanced Random Forest and validate it with 5-fold
+   training-only cross-validation.
+5. **Select the threshold** from out-of-fold probabilities and freeze it at
+   **0.35** before scoring the test split.
+6. **Explain** global and local decisions with SHAP.
+7. **Serve** the frozen model through a strictly validated local FastAPI
+   service.
+8. **Verify** artifacts with a SHA-256 manifest, 21 tests, and GitHub Actions.
+
+## Architecture
+
+![Research architecture](docs/assets/architecture.svg)
+
+[Open the architecture diagram at full size](docs/assets/architecture.svg).
+
+The pipeline is deliberately split into three stages:
+
+| Stage | What happens | Main code |
+|---|---|---|
+| Data preparation | Integration, leakage-safe preprocessing, stratified split | `notebooks/01`–`04` |
+| Modeling and validation | Baselines, comparison, tuning, OOF threshold | `notebooks/05`–`09` |
+| Serving and governance | FastAPI, SHAP, manifest, tests, CI | `src/`, `tests/`, `artifacts/` |
+
+Full detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## Verified results
+
+Retrospective metrics at the frozen **0.35** threshold on the 118,108-row
+reserved test split:
+
+| Metric | Value |
+|---|---:|
+| Accuracy | 0.972161 |
+| Balanced accuracy | 0.852896 |
+| Precision | 0.582119 |
+| Recall | 0.724655 |
+| F1 | 0.645613 |
+| ROC-AUC | 0.937292 |
+| **PR-AUC (Average Precision)** | **0.730518** |
+| TN / FP / FN / TP | 111,825 / 2,150 / 1,138 / 2,995 |
+
+The cleanest generalization estimate is the **5-fold training-only**
+cross-validation: PR-AUC **0.704887 ± 0.008989**, F1 **0.666683 ± 0.007884**,
+ROC-AUC **0.931818 ± 0.003393**.
+
+| Model comparison (test PR-AUC) | Temporal stability (tuned RF) |
+|---|---|
+| ![PR-AUC comparison by model](docs/assets/model_comparison_pr_auc.svg) | ![PR-AUC by time bucket](results/phase12_plots/time_bucket_pr_auc.png) |
+
+**Left:** Canonical Average Precision from the tracked result files. The untuned
+Random Forest reaches 0.722463 and the tuned final model reaches 0.730518;
+PR-AUC is threshold-independent.
+**Right:** Phase 12 splits the reserved test split into five time buckets.
+Buckets 2–5 range from 0.723480 to 0.764482 PR-AUC; the earliest bucket is
+0.654729 and also has the lowest fraud rate. This is a stability check, **not** a
+strict forward-in-time holdout.
+
+> **Read this before quoting a number:** the test split is retrospective and has
+> been reused across phases. Use the training-only 5-fold estimate for
+> generalization. Full tables and sources: [`docs/RESULTS.md`](docs/RESULTS.md).
+
+## Explainability
+
+SHAP values were computed for 500 training transactions with
+`shap.TreeExplainer`, aligned to the class-1 (Fraud) output. The additivity mean
+absolute error is **0.00001165**.
+
+| Global importance | Beeswarm |
+|---|---|
+| ![Global SHAP importance](results/phase10_plots/shap_global_bar.png) | ![SHAP beeswarm](results/phase10_plots/shap_beeswarm.png) |
+
+| Rank | Feature | Mean absolute SHAP |
+|---:|---|---:|
+| 1 | `numeric__V258` | 0.038334 |
+| 2 | `numeric__C1` | 0.023560 |
+| 3 | `numeric__C13` | 0.021904 |
+| 4 | `numeric__C14` | 0.021781 |
+| 5 | `numeric__TransactionAmt` | 0.020680 |
+| 6 | `numeric__TransactionDT` | 0.018603 |
+
+SHAP values describe model associations, not causal effects. The presence of
+`TransactionDT` reinforces the temporal-leakage caveat.
+
+## Tech stack
+
+| Layer | Tools |
+|---|---|
+| Language | Python 3.12 |
+| Data | pandas, NumPy, SciPy |
+| Modeling | scikit-learn 1.9.0, XGBoost |
+| Explainability | SHAP |
+| Serving | FastAPI, Uvicorn, Pydantic |
+| Visualization | Matplotlib, Seaborn |
+| Testing and quality | unittest, ruff, GitHub Actions |
+| Reproducibility | SHA-256 artifact manifest, pinned dependencies, LF normalization |
+
+## Quick start
+
+```powershell
+git clone https://github.com/Mmahani/fraud-detection-system.git
+cd fraud-detection-system
+
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-After integration:
+Start the API:
 
-| Item | Value |
-|---|---:|
-| Rows | 590,540 |
-| Raw features after merge | 434 |
-| Fraud rate | 3.4989% |
-| Training rows (80%) | 472,432 |
-| Test rows (20%) | 118,108 |
-| Transformed features | 495 |
+```powershell
+python -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+```
 
-The current split is a stratified random split (`random_state=42`). A
-time-based validation split is planned before final delivery.
+In a second terminal, run the demo:
 
----
+```powershell
+python examples/demo_api.py
+```
 
-## Repository structure
+The demo exercises `/health`, `/model/info`, `/model/features`, `/predict`,
+`/predict/batch`, and `/explain` using the synthetic payload. See [`docs/DEMO.md`](docs/DEMO.md) for a
+manual walkthrough.
+
+The model artifacts require **scikit-learn 1.9.0**; the pinned requirements avoid
+the `InconsistentVersionWarning` seen with other versions.
+
+## API at a glance
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/health` | Liveness and model-load status |
+| `GET` | `/model/info` | Model type, feature counts, threshold, risk bands |
+| `GET` | `/model/features` | Required raw features and derived flags |
+| `POST` | `/predict` | Score one transaction |
+| `POST` | `/predict/batch` | Score up to 500 transactions |
+| `POST` | `/explain` | Score one transaction and return SHAP factors |
+
+Example response for the synthetic payload:
+
+```json
+{
+  "transaction_id": 990000001,
+  "fraud_probability": 0.09821428571428573,
+  "classification_threshold": 0.35,
+  "prediction": "Legitimate",
+  "risk_level": "Low"
+}
+```
+
+[`examples/sample_transaction.json`](examples/sample_transaction.json) is fully
+synthetic. It has 433 fields: 432 model inputs plus `TransactionID`. The service
+derives the two `*_is_missing` flags, which brings the model input to 434
+features.
+
+The service is intentionally local: no authentication, rate limiting, or TLS.
+Do not expose it directly to the public internet. See
+[`docs/DEMO.md`](docs/DEMO.md) and [`SECURITY.md`](SECURITY.md).
+
+## Repository map
 
 ```text
 fraud-detection-system/
-├── data/
-│   ├── raw/                 # not tracked by Git
-│   └── processed/           # not tracked by Git
-├── models/
-│   ├── best_tuned_model.pkl
-│   ├── preprocessor.pkl
-│   ├── threshold_config.json
-│   ├── model_metadata.json
-│   └── explainability_config.json
-├── notebooks/
-│   ├── 01_data_inspection.ipynb
-│   ├── 02_data_integration.ipynb
-│   ├── 03_eda.ipynb
-│   ├── 04_preprocessing.ipynb
-│   ├── 05_baseline_model.ipynb
-│   ├── 06_model_comparison.ipynb
-│   ├── 07_model_validation_audit.ipynb
-│   ├── 08_imbalance_and_tuning.ipynb
-│   ├── 08_model_improvement.ipynb      # earlier experiment, not the final path
-│   ├── 09_threshold_optimization.ipynb
-│   ├── 10_shap_explainability.ipynb
-│   └── 11_final_model_packaging.ipynb
+├── data/                     # raw/ and processed/ are not tracked
+├── models/                   # frozen inference artifacts + README
+├── notebooks/                # phased research notebooks + README
 ├── artifacts/
-│   └── manifest.json        # artifact inventory and SHA-256 hashes
-├── results/                 # metrics, reports and plots
+│   └── manifest.json         # 40-entry SHA-256 artifact inventory
+├── results/                  # metrics, reports, plots + README
 ├── examples/
-│   └── sample_transaction.json  # synthetic API payload template
+│   ├── sample_transaction.json   # synthetic 433-field payload
+│   ├── demo_api.py               # local API demo client
+│   └── README.md
+├── docs/
+│   ├── assets/
+│   │   ├── architecture.svg
+│   │   ├── model_comparison_pr_auc.svg
+│   │   └── model_comparison_pr_auc.png
+│   ├── ARCHITECTURE.md
+│   ├── RESULTS.md
+│   ├── DEMO.md
+│   ├── CASE_STUDY.md
+│   ├── PORTFOLIO.md
+│   └── README.md
 ├── scripts/
-│   ├── audit_metrics.py     # PR-AUC definition audit
-│   └── time_based_validation.py  # Phase 12 time-bucket diagnostic
+│   ├── audit_metrics.py
+│   ├── plot_model_comparison.py
+│   └── time_based_validation.py
 ├── src/
-│   ├── prediction.py        # inference and explanation utilities
+│   ├── prediction.py
 │   ├── api/
-│   │   ├── main.py          # FastAPI application
-│   │   └── schemas.py       # response models
+│   │   ├── main.py
+│   │   └── schemas.py
 │   └── fraud/
-│       ├── metrics.py       # canonical evaluation metrics (AP for PR-AUC)
-│       └── artifacts.py     # manifest build/validate CLI
+│       ├── metrics.py
+│       └── artifacts.py
 ├── tests/
-│   ├── test_metrics.py
-│   ├── test_artifacts.py
-│   └── test_api.py
-├── .github/
-│   └── workflows/
-│       └── ci.yml           # lint + unit tests
-├── .gitattributes        # LF line endings (portable artifact hashes)
-├── .gitignore
+├── .github/workflows/ci.yml
+├── .gitattributes
 ├── DATA_LICENSE.md
 ├── LICENSE
 ├── MODEL_CARD.md
@@ -134,11 +284,11 @@ fraud-detection-system/
 └── requirements-ci.txt
 ```
 
-Text files are stored with LF line endings via `.gitattributes`, so the
-SHA-256 hashes in [`artifacts/manifest.json`](artifacts/manifest.json) are
-identical on Windows, Linux, and macOS.
+Text files use LF line endings via `.gitattributes`, so the SHA-256 hashes in
+[`artifacts/manifest.json`](artifacts/manifest.json) are stable across checkout
+platforms.
 
-Only the final inference artifacts are intended to be tracked in Git:
+Only the final inference artifacts are tracked:
 
 - `models/best_tuned_model.pkl`
 - `models/preprocessor.pkl`
@@ -146,12 +296,26 @@ Only the final inference artifacts are intended to be tracked in Git:
 - `models/model_metadata.json`
 - `models/explainability_config.json`
 
-`models/random_forest.pkl` (157 MB) and the processed matrices are intentionally
+`models/random_forest.pkl` (~157 MB) and the processed matrices are intentionally
 ignored.
 
----
+## Documentation
 
-## Final model
+| Document | Contents |
+|---|---|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Data flow, components, leakage controls, serving path |
+| [`docs/RESULTS.md`](docs/RESULTS.md) | Verified metrics, plots, threshold behaviour, SHAP |
+| [`docs/DEMO.md`](docs/DEMO.md) | Step-by-step API walkthrough |
+| [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md) | Problem, role, decisions, challenges, results |
+| [`docs/PORTFOLIO.md`](docs/PORTFOLIO.md) | LinkedIn and CV descriptions |
+| [`MODEL_CARD.md`](MODEL_CARD.md) | Intended use, metrics, ethics, limitations |
+| [`docs/README.md`](docs/README.md) | Documentation index and reading order |
+
+Folder-level guides: [`examples/README.md`](examples/README.md),
+[`notebooks/README.md`](notebooks/README.md),
+[`results/README.md`](results/README.md), [`models/README.md`](models/README.md).
+
+## Model card
 
 | Property | Value |
 |---|---|
@@ -165,367 +329,66 @@ ignored.
 | Raw input features | 434 |
 | Transformed features | 495 |
 | Classification threshold | **0.35** |
+| Risk bands | Low `<0.30`, Medium `0.30–0.70`, High `≥0.70` |
 
-The threshold was selected from out-of-fold (OOF) training probabilities using a
-simulated cost of `COST_FP=1` and `COST_FN=5`, with F1 as a tie-breaker. These
-costs are illustrative, not verified business costs.
+The threshold was selected from out-of-fold training probabilities using an
+illustrative `COST_FP=1` / `COST_FN=5` rule, with F1 as a tie-breaker. These costs
+are not verified business costs. Risk bands are presentation labels, not the
+classification threshold.
 
-Risk levels are presentation bands, not the classification threshold:
+See [`MODEL_CARD.md`](MODEL_CARD.md) for intended use and ethical considerations.
 
-- Low: `probability < 0.30`
-- Medium: `0.30 <= probability < 0.70`
-- High: `probability >= 0.70`
+## Reproducibility
 
----
-
-## Model card
-
-See [MODEL_CARD.md](MODEL_CARD.md) for intended use, factors, metrics, training
-and evaluation data, ethical considerations, and operational limitations.
-
----
-
-## Results
-
-Retrospective test-set metrics at the frozen threshold **0.35**:
-
-| Metric | Value |
-|---|---:|
-| Accuracy | 0.972161 |
-| Balanced accuracy | 0.852896 |
-| Precision | 0.582119 |
-| Recall | 0.724655 |
-| F1 | 0.645613 |
-| ROC-AUC | 0.937292 |
-| PR-AUC (Average Precision) | 0.730518 |
-| TN / FP / FN / TP | 111,825 / 2,150 / 1,138 / 2,995 |
-
-At threshold 0.50, for comparison:
-
-| Metric | Value |
-|---|---:|
-| Precision | 0.757558 |
-| Recall | 0.636584 |
-| F1 | 0.691822 |
-
-> **Metric definition:** all PR-AUC values in this repository are **Average
-> Precision** (`src.fraud.metrics.pr_auc`), not the trapezoidal
-> `auc(recall, precision)` variant. The Phase 5 and Phase 6 notebook outputs use
-> this canonical definition. The historical trapezoidal numbers are retained only
-> in [`results/metrics_definition_audit.md`](results/metrics_definition_audit.md)
-> for traceability.
-
-### Phase 6 model comparison
-
-Canonical Average Precision on the fixed test set. Random Forest leads on PR-AUC,
-while XGBoost and SGD trade precision for recall:
-
-| Model | PR-AUC | F1 | ROC-AUC | FP | FN |
-|---|---:|---:|---:|---:|---:|
-| Random Forest | 0.722463 | 0.663877 | 0.940513 | 337 | 1,912 |
-| XGBoost | 0.573457 | 0.306512 | 0.909753 | 13,862 | 876 |
-| Gradient Boosting | 0.343137 | 0.221847 | 0.789104 | 75 | 3,608 |
-| SGD (Phase 5 baseline) | 0.286753 | 0.328110 | 0.860654 | 8,458 | 1,662 |
-
-Full comparison: [`results/model_comparison.csv`](results/model_comparison.csv).
-The metric outputs in notebook 06 were refreshed from the saved test
-probabilities under `scikit-learn==1.9.0`; training times and feature
-importances remain from the historical run (a full retrain exceeded the 8 GB
-environment).
-
-The test set has been evaluated in several phases. The values above are therefore
-retrospective and should not be treated as a pristine final holdout.
-
-### Time-based validation diagnostic
-
-The original split is random and stratified, and `TransactionDT` is one of the
-strongest features, so temporal leakage is possible. Phase 12 scores the frozen
-models on five equal-count time buckets of the reserved test set, from earliest
-to latest.
-
-| Time bucket | Tuned Random Forest PR-AUC | Fraud rate |
-|---|---:|---:|
-| 1 (earliest) | 0.654729 | 2.41% |
-| 2 | 0.764482 | 3.99% |
-| 3 | 0.741715 | 3.73% |
-| 4 | 0.737265 | 3.97% |
-| 5 (latest) | 0.723480 | 3.40% |
-
-The later buckets are stable for the tuned model (`0.723–0.742` PR-AUC). The
-earliest bucket is weaker, but it also has the lowest fraud rate, and PR-AUC is
-prevalence-sensitive, so part of that gap is compositional rather than temporal
-degradation. Because the split is random, every bucket overlaps the training
-period: this is a temporal-stability check on unseen rows, not a strict
-forward-in-time holdout. A full forward-in-time retrain is deferred under the
-current 8 GB memory budget.
-
-Artifacts: [`results/phase12_time_validation.md`](results/phase12_time_validation.md),
-[`results/phase12_time_validation.csv`](results/phase12_time_validation.csv),
-[`results/phase12_summary.json`](results/phase12_summary.json), and
-`results/phase12_plots/time_bucket_pr_auc.png`. Reproduce with
-`python scripts/time_based_validation.py`.
-
----
-
-## Explainability
-
-Phase 10 is complete. SHAP values were computed for a reproducible sample of
-500 training transactions using `shap.TreeExplainer` on the frozen Random
-Forest. The class-1 additivity mean absolute error is `0.00001165`.
-
-Top global features by mean absolute SHAP value:
-
-| Rank | Feature | Mean absolute SHAP |
-|---:|---|---:|
-| 1 | `numeric__V258` | 0.038334 |
-| 2 | `numeric__C1` | 0.023560 |
-| 3 | `numeric__C13` | 0.021904 |
-| 4 | `numeric__C14` | 0.021781 |
-| 5 | `numeric__TransactionAmt` | 0.020680 |
-| 6 | `numeric__TransactionDT` | 0.018603 |
-
-Full artifacts:
-
-- `results/shap_global_importance.csv`
-- `results/shap_global_importance_top20.csv`
-- `results/shap_fraud_direction.csv`
-- `results/shap_local_explanations.csv`
-- `results/phase10_final_report.md`
-- `results/phase10_plots/shap_global_bar.png`
-- `results/phase10_plots/shap_beeswarm.png`
-
-SHAP values describe model associations, not causal effects. The presence of
-`TransactionDT` among the top features reinforces the need for the time-based
-validation documented in Phase 12.
-
----
-
-## Installation
-
-Tested with Python 3.12.6 on Windows.
-
-```powershell
-git clone https://github.com/Mmahani/fraud-detection-system.git
-cd fraud-detection-system
-
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
-
-The model artifacts were serialized with **scikit-learn 1.9.0**. Installing the
-pinned version avoids the `InconsistentVersionWarning` seen under 1.8.0.
-
----
-
-## Quick start
-
-### Batch prediction from processed data
-
-```python
-import pandas as pd
-
-from src.prediction import predict_batch
-
-df = pd.read_csv("data/processed/merged_data.csv.gz", nrows=5)
-result = predict_batch(df)
-print(result.to_string(index=False))
-```
-
-### Single transaction
-
-```python
-import pandas as pd
-
-from src.prediction import predict_transaction
-
-df = pd.read_csv("data/processed/merged_data.csv.gz", nrows=1)
-result = predict_transaction(df)
-print(result)
-```
-
-### Explanation (requires `shap`)
-
-```python
-import pandas as pd
-
-from src.prediction import explain_transaction
-
-df = pd.read_csv("data/processed/merged_data.csv.gz", nrows=1)
-result = explain_transaction(df, top_n=3)
-print(result)
-```
-
-### Loading the preprocessor
-
-Load the preprocessor through the project helper, not directly with `joblib`:
-
-```python
-from src.prediction import load_preprocessor
-
-preprocessor = load_preprocessor()
-```
-
-Direct `joblib.load("models/preprocessor.pkl")` fails because the artifact
-references compatibility symbols defined in `src.prediction`.
-
----
-
-## REST API
-
-The Phase 13 FastAPI service loads the frozen model once at startup. Start it
-from the project root:
-
-```powershell
-python -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
-```
-
-Interactive OpenAPI docs are available at `http://127.0.0.1:8000/docs`.
-
-| Method | Path | Purpose |
-|---|---|---|
-| `GET` | `/health` | Liveness and model-load status |
-| `GET` | `/model/info` | Model type, feature counts, threshold, risk bands |
-| `GET` | `/model/features` | Required raw feature names and derived flags |
-| `POST` | `/predict` | Score one transaction |
-| `POST` | `/predict/batch` | Score up to 500 transactions |
-| `POST` | `/explain` | Score one transaction and return SHAP factors |
-
-[`examples/sample_transaction.json`](examples/sample_transaction.json) is a valid,
-fully synthetic payload. It has 433 fields because the two `*_is_missing` flags
-are derived from the raw `DeviceInfo` and `id_33` fields. No value in the file
-comes from a real transaction. Example:
-
-```powershell
-$body = Get-Content examples/sample_transaction.json -Raw
-Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/predict `
-  -ContentType "application/json" -Body $body
-```
-
-The API is intentionally strict: missing or unexpected features return `422`.
-There is no authentication, rate limiting, or TLS in this local service; deploy
-it behind a gateway for production use.
-
----
-
-## Notebook workflow
-
-Run the notebooks from the `notebooks/` directory, in this order:
-
-| # | Notebook | Purpose |
-|---|---|---|
-| 01 | `01_data_inspection.ipynb` | Raw data profile |
-| 02 | `02_data_integration.ipynb` | Merge transaction and identity data |
-| 03 | `03_eda.ipynb` | Exploratory analysis |
-| 04 | `04_preprocessing.ipynb` | Leakage-safe preprocessing and split |
-| 05 | `05_baseline_model.ipynb` | Baseline model |
-| 06 | `06_model_comparison.ipynb` | Model comparison |
-| 07 | `07_model_validation_audit.ipynb` | Validation and leakage audit |
-| 08 | `08_imbalance_and_tuning.ipynb` | Final tuning path |
-| 09 | `09_threshold_optimization.ipynb` | OOF threshold selection |
-| 10 | `10_shap_explainability.ipynb` | SHAP artifacts |
-| 11 | `11_final_model_packaging.ipynb` | Packaging and inference checks |
-
-`08_model_improvement.ipynb` is an earlier experiment and is not the authoritative
-tuning path. Its `models/improved_model.pkl` artifact has poor test performance
-and is not used for inference.
-
----
-
-## Reproducibility notes
-
-- Raw and processed data are excluded from Git. Regenerate processed data with
-  notebooks 01–04.
-- The final model is tracked in Git; large comparison models are not.
+- Raw and processed data are excluded from Git. Regenerate them with notebooks
+  01–04 after obtaining the data from Kaggle.
+- The final model is tracked; large comparison models are not.
 - The preprocessor must be loaded through `src.prediction`.
 - Random seeds are fixed at `42` where applicable.
-- The model was trained with scikit-learn 1.9.0.
-- The current test metrics are not a clean final holdout and must be reported as
-  retrospective.
+- The model was serialized with scikit-learn 1.9.0.
+- The test metrics are retrospective, not a pristine final holdout.
+- `python -m src.fraud.artifacts validate` checks the tracked artifacts.
 
----
-
-## Artifact manifest
-
-`artifacts/manifest.json` records the inference, evaluation, explainability,
-and processed-data artifacts with sizes and SHA-256 hashes.
-
-Build the manifest after changing any tracked artifact:
-
-```powershell
-python -m src.fraud.artifacts build
-```
-
-Validate the current checkout:
-
-```powershell
-python -m src.fraud.artifacts validate
-```
-
-Required artifacts must exist and match their hashes. Optional artifacts
-(processed data and other optional files) are reported as warnings rather than
-hard failures.
-
-Local-only test probability arrays for the Phase 6 models are stored as
-`results/test_proba_{sgd,rf,gb,xgb}.npy` and are ignored by Git. Their shapes,
-library versions, and canonical Average Precision values are recorded in
-`results/test_probabilities_metadata.json`.
-
----
+The Phase 6 metric outputs were refreshed from saved test probabilities because a
+full retrain exceeded the 8 GB environment. Training times and feature
+importances remain from the historical run; see
+[`results/phase8_evaluation_audit.md`](results/phase8_evaluation_audit.md).
 
 ## Testing
 
-Run the standard-library test suite from the project root:
-
 ```powershell
 python -m unittest discover -s tests -v
+python -m ruff check src scripts tests examples
+python -m src.fraud.artifacts validate
 ```
 
-The suite covers the canonical metrics, input validation, manifest generation,
-manifest validation, and the REST API (health, model info, single and batch
-prediction, validation errors, and SHAP explanation).
-
-GitHub Actions runs `.github/workflows/ci.yml` on pushes and pull requests to
-`main`. It installs `requirements-ci.txt`, runs `ruff`, and executes the
-`unittest` suite.
-
----
-
-## Release notes
-
-The release notes are documented in [RELEASE_NOTES.md](RELEASE_NOTES.md).
-`v1.0.0` records the private delivery snapshot; `v1.0.1` is the prepared public
-research release. See the notes for verification results, headline metrics,
-deliverables, the handoff checklist, and known limitations.
-
----
+The suite covers canonical metrics, input validation, manifest generation and
+validation, and the REST API (health, model info, single and batch prediction,
+validation errors, and SHAP explanation). GitHub Actions runs lint and tests on
+pushes and pull requests to `main`. On a clean clone without `data/processed/`,
+one data-dependent test is skipped and the other 20 run.
 
 ## Known limitations
 
-- Notebooks 05 and 10 have been re-executed end-to-end after the path and metric
+- Notebooks 05 and 10 were re-executed end to end after the path and metric
   changes. The Phase 6 metric outputs were refreshed from saved test
-  probabilities, but its training-time and feature-importance outputs remain
-  from the historical run. The other notebooks have not been re-executed
-  end-to-end.
-- A full Phase 6 training rerun is still pending because the current 8 GB
-  environment cannot complete it reliably. The saved test probability arrays let
-  the reported metrics be regenerated without retraining.
+  probabilities, but its training-time and feature-importance outputs remain from
+  the historical run. The other notebooks have not been re-executed end to end.
+- A full Phase 6 training rerun is still pending because the 8 GB environment
+  cannot complete it reliably. The saved probability arrays let the reported
+  metrics be regenerated without retraining.
 - The model shows a large train/test gap at the default 0.5 threshold (train F1
   0.9569 vs test F1 0.6913), so overfitting remains a concern.
-- The current split is random and stratified, not time-based; `TransactionDT` is
-  among the most important SHAP features, so temporal leakage is possible. The
-  Phase 12 diagnostic checks temporal stability on the reserved holdout, but it
-  cannot replace a strict forward-in-time retrain, which is still pending.
+- The split is random and stratified, not time-based. `TransactionDT` is among
+  the strongest SHAP features, so temporal leakage is possible. Phase 12 checks
+  temporal stability on the reserved holdout but cannot replace a strict
+  forward-in-time retrain.
 - The test set has been reused across phases and is not a pristine holdout.
-- The probabilities are not calibrated; risk bands are heuristic.
+- Probabilities are not calibrated; risk bands are heuristic.
 - CI runs lint and unit tests, but there is no deployment pipeline or container
   image. The API has no authentication, rate limiting, or TLS and should run
   behind a gateway in production.
 - `models/xgboost.pkl` requires the optional `xgboost` package.
-
----
 
 ## Security
 
@@ -533,8 +396,6 @@ The FastAPI service is a local research service. It has no authentication, rate
 limiting, or TLS. Do not expose it directly to the public internet. Report
 vulnerabilities through GitHub's private vulnerability reporting as described in
 [`SECURITY.md`](SECURITY.md).
-
----
 
 ## Data and license
 
@@ -562,3 +423,10 @@ provided for research and education only, "as is", and are not a redistribution
 of the dataset. The MIT License covers the source code and documentation; it does
 not grant rights to the dataset. Commercial or production use requires
 independent legal review and any permission required from the rights holders.
+
+## Release notes
+
+The release notes are documented in [RELEASE_NOTES.md](RELEASE_NOTES.md).
+`v1.0.0` records the private delivery snapshot; `v1.0.1` is the prepared research
+release. See the notes for verification results, headline metrics, deliverables,
+the handoff checklist, and known limitations.

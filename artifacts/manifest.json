@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "fraud-detection-system",
-  "generated_at": "2026-10-19T20:55:09Z",
+  "generated_at": "2026-11-05T21:07:01Z",
   "files": [
     {
       "path": "models/best_tuned_model.pkl",
@@ -63,8 +63,8 @@
       "required": true,
       "description": "Phase 8 CV and test summary",
       "status": "present",
-      "size_bytes": 2461,
-      "sha256": "616fc1e03e743eb0e8fddc0a8922186793b1b5a3076d68cf02e08d14ace771cf"
+      "size_bytes": 2375,
+      "sha256": "3e7fc96ff7d9ee5d81bdaf8609344fed468df1139c6178b268577a6594a046f7"
     },
     {
       "path": "results/phase8_evaluation_audit.md",
@@ -108,8 +108,8 @@
       "required": true,
       "description": "Phase 8 narrative report",
       "status": "present",
-      "size_bytes": 4543,
-      "sha256": "5337675a6244c2b6a9b2c731fb231a963afc7bdd25feabfee57857c1cb90d50e"
+      "size_bytes": 4533,
+      "sha256": "1b87a0b43751580b75277443e848fcb9770c62edafdabebad8cbf0c6a8e58694"
     },
     {
       "path": "results/phase8_tuned_vs_untuned_test.csv",
@@ -126,8 +126,8 @@
       "required": true,
       "description": "Phase 6 model comparison table",
       "status": "present",
-      "size_bytes": 648,
-      "sha256": "db770a1b39742e3ccb1e3e62baeb8bab31f060fcaa5608f3bc3ecd6153c17c24"
+      "size_bytes": 643,
+      "sha256": "c004adbeea19e72131d82ef910dc54ef95e8d19a970d2a697573af4e349f4401"
     },
     {
       "path": "results/hyperparameter_search_results.csv",
@@ -178,10 +178,10 @@
       "path": "results/final_prediction_examples.csv",
       "group": "evaluation",
       "required": true,
-      "description": "Phase 11 prediction examples",
+      "description": "Phase 11 prediction examples (transaction identifiers anonymized)",
       "status": "present",
-      "size_bytes": 648,
-      "sha256": "83f229088fb2ec3f74d3e4713a791fcd3383cdc9895a982930c5f5a5830f4d45"
+      "size_bytes": 678,
+      "sha256": "93f7f14d7642482a84922fcf9fe5a24a488d932bb91e77fe5e205a1397f0c66f"
     },
     {
       "path": "results/metrics_definition_audit.md",
@@ -189,8 +189,8 @@
       "required": true,
       "description": "Audit of canonical versus historical PR-AUC definitions",
       "status": "present",
-      "size_bytes": 2966,
-      "sha256": "a0bd2b6d2cb637a58db2e4c9b405cb5df542ec4c547d0ad419f5e48280770ded"
+      "size_bytes": 2901,
+      "sha256": "fd2a9b1c86bdf50eaeb80bc4baa89312cef1fe551bbdfa719f1663f40d2dc7f9"
     },
     {
       "path": "results/metrics_definition_audit.csv",
@@ -198,8 +198,8 @@
       "required": true,
       "description": "Machine-readable PR-AUC audit table",
       "status": "present",
-      "size_bytes": 1111,
-      "sha256": "bc2e8ce4cd6f837601816219449ee9c85c7f97609a483be8519edc3d0c7b7634"
+      "size_bytes": 1104,
+      "sha256": "e8c45537f3a325db348ff8e24e2c2d47b667f1a0999a219212db49a49dcf4475"
     },
     {
       "path": "results/phase12_time_validation.csv",
@@ -207,8 +207,8 @@
       "required": true,
       "description": "Phase 12 time-bucket diagnostic table",
       "status": "present",
-      "size_bytes": 4784,
-      "sha256": "e001b0bd6a8893dae6e73a8c86cc3b42c20ef391a005014ea7a4ceac4227ca51"
+      "size_bytes": 4758,
+      "sha256": "e7c1c6574ecf84f15a45d5b8fb029f1794349caee6de1f3cd454df7f7ad4a94d"
     },
     {
       "path": "results/phase12_time_validation.md",
@@ -216,8 +216,8 @@
       "required": true,
       "description": "Phase 12 time-based validation report",
       "status": "present",
-      "size_bytes": 6053,
-      "sha256": "379ed72cd26693070b52e2e3cbe9a659ca68e3269053246dce18bf35147bee56"
+      "size_bytes": 5971,
+      "sha256": "1646eff9fe5cc3420a9103b818ff0c3e9e1f113eba2197dd13a77c295f9c2660"
     },
     {
       "path": "results/phase12_summary.json",
@@ -225,8 +225,8 @@
       "required": true,
       "description": "Phase 12 diagnostic summary",
       "status": "present",
-      "size_bytes": 1965,
-      "sha256": "c648ace415e565b3aa89f35f8b21341a65543d260eb135ed94a978a43ef09f85"
+      "size_bytes": 1923,
+      "sha256": "2b8fc51ee2722e93083f4b7c7687991eab04e55e02211d92e22a463ced4c72f1"
     },
     {
       "path": "results/phase12_plots/time_bucket_pr_auc.png",
@@ -243,8 +243,8 @@
       "required": false,
       "description": "Archived Phase 8 improvement experiment; not the final model",
       "status": "present",
-      "size_bytes": 555,
-      "sha256": "29d457ff652df512f77d9238ced6175dd25c52dbba7fd31e99c1f5d732b070a3"
+      "size_bytes": 551,
+      "sha256": "87bd7a586ceca648cc2510ea845c3f627658d987e3ac3ad645ee0e055ad1e068"
     },
     {
       "path": "results/oof_proba.npy",
@@ -279,8 +279,8 @@
       "required": false,
       "description": "Global SHAP importance table (missing; regenerate Phase 10)",
       "status": "present",
-      "size_bytes": 21344,
-      "sha256": "272fa47da3314f3161b4185e75bd50bd5338d7a540c42b543e54c65a111da834"
+      "size_bytes": 20848,
+      "sha256": "997d8f70abfd025f7bdf709a6ff41348d5d0f7d64b807d63eecb9e637bfb605a"
     },
     {
       "path": "results/shap_global_importance_top20.csv",
@@ -288,8 +288,8 @@
       "required": false,
       "description": "Top-20 SHAP importance table (missing; regenerate Phase 10)",
       "status": "present",
-      "size_bytes": 818,
-      "sha256": "ae4a492ebad85badfc985badbac540f177d85e9572441f2567c87defb0c23f25"
+      "size_bytes": 797,
+      "sha256": "51a9265ad9ff6221c0ecd34d9db9bd271d9ca1ea6a75756ee861c96e7538d071"
     },
     {
       "path": "results/shap_fraud_direction.csv",
@@ -297,8 +297,8 @@
       "required": false,
       "description": "SHAP direction summary (missing; regenerate Phase 10)",
       "status": "present",
-      "size_bytes": 32367,
-      "sha256": "cb8ba74300d60186d5ed205d275e884933e831f476ca868380172d323c0141af"
+      "size_bytes": 31871,
+      "sha256": "aec23d609842798cf50bbb7b2d78ba9275670491e9a1d3d7eb2b3a208b353c98"
     },
     {
       "path": "results/shap_local_explanations.csv",
@@ -306,8 +306,8 @@
       "required": false,
       "description": "Local SHAP explanation examples (missing; regenerate Phase 10)",
       "status": "present",
-      "size_bytes": 2387,
-      "sha256": "d73ddeee18eaba4e181942e8f43c8a500b5a8b837b999ce74a3d4e7d895a2f7f"
+      "size_bytes": 2382,
+      "sha256": "88433ce28c920eb67a57e23dc54af1802e0bf83d24f01bab3d2a7d1e06c531a4"
     },
     {
       "path": "results/phase10_final_report.md",
@@ -315,8 +315,8 @@
       "required": false,
       "description": "Phase 10 report (missing; regenerate Phase 10)",
       "status": "present",
-      "size_bytes": 2201,
-      "sha256": "41ca5aaf84bc0554fe6ef729e6258be4b27e67659e589db7ca900c2c9b180ad7"
+      "size_bytes": 2174,
+      "sha256": "0cb341e64727ec44ae6843aa2487db184ae76944b6d8d2565d83e70452aa0080"
     },
     {
       "path": "data/processed/merged_data.csv.gz",

@@ -1,6 +1,7 @@
 # Fraud Detection System — IEEE-CIS
 
 [![CI](https://github.com/Mmahani/fraud-detection-system/actions/workflows/ci.yml/badge.svg)](https://github.com/Mmahani/fraud-detection-system/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 End-to-end machine learning project for credit-card fraud detection using the
 [IEEE-CIS Fraud Detection](https://www.kaggle.com/c/ieee-fraud-detection) dataset.
@@ -9,11 +10,12 @@ The project covers data integration, exploratory analysis, leakage-safe
 preprocessing, baseline modeling, model comparison, validation, threshold
 optimization, SHAP explainability, and model packaging.
 
-> **Current status:** Phases 10–15 are complete: SHAP explanations, the canonical
-> PR-AUC metric, a time-based validation diagnostic, a REST API, CI, and a model
-> card documenting intended use and limitations. Deployment packaging and
-> ongoing monitoring remain future work. See
-> [Known limitations](#known-limitations).
+> **Current status:** Public research release candidate for `v1.0.1`. Phases 10–15
+> are complete: SHAP explanations, the canonical PR-AUC metric, a time-based
+> validation diagnostic, a REST API, CI, and a model card documenting intended
+> use and limitations. The code is MIT-licensed; the IEEE-CIS data is not
+> included. The model and API are **not approved for production use**. See
+> [Known limitations](#known-limitations) and [Data and license](#data-and-license).
 
 ---
 
@@ -34,14 +36,18 @@ optimization, SHAP explainability, and model packaging.
 - [Testing](#testing)
 - [Release notes](#release-notes)
 - [Known limitations](#known-limitations)
+- [Security](#security)
 - [Data and license](#data-and-license)
 
 ---
 
 ## Dataset
 
-The IEEE-CIS dataset contains anonymized e-commerce transactions. The raw files
-are not committed to this repository because of their size.
+The IEEE-CIS dataset contains anonymized e-commerce transactions. The raw and
+processed files are **not committed** to this repository: they are large, and the
+competition rules permit non-commercial use only and prohibit redistribution.
+Obtain the data from Kaggle and accept the competition rules before use; see
+[Data and license](#data-and-license).
 
 Place the following files in `data/raw/`:
 
@@ -97,7 +103,7 @@ fraud-detection-system/
 │   └── manifest.json        # artifact inventory and SHA-256 hashes
 ├── results/                 # metrics, reports and plots
 ├── examples/
-│   └── sample_transaction.json  # valid API payload template
+│   └── sample_transaction.json  # synthetic API payload template
 ├── scripts/
 │   ├── audit_metrics.py     # PR-AUC definition audit
 │   └── time_based_validation.py  # Phase 12 time-bucket diagnostic
@@ -116,13 +122,21 @@ fraud-detection-system/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml           # lint + unit tests
+├── .gitattributes        # LF line endings (portable artifact hashes)
 ├── .gitignore
+├── DATA_LICENSE.md
+├── LICENSE
 ├── MODEL_CARD.md
 ├── README.md
 ├── RELEASE_NOTES.md
+├── SECURITY.md
 ├── requirements.txt
 └── requirements-ci.txt
 ```
+
+Text files are stored with LF line endings via `.gitattributes`, so the
+SHA-256 hashes in [`artifacts/manifest.json`](artifacts/manifest.json) are
+identical on Windows, Linux, and macOS.
 
 Only the final inference artifacts are intended to be tracked in Git:
 
@@ -291,7 +305,8 @@ validation documented in Phase 12.
 Tested with Python 3.12.6 on Windows.
 
 ```powershell
-cd "C:\Users\HP\Desktop\AI Projct\fraud-detection-system"
+git clone https://github.com/Mmahani/fraud-detection-system.git
+cd fraud-detection-system
 
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -378,9 +393,10 @@ Interactive OpenAPI docs are available at `http://127.0.0.1:8000/docs`.
 | `POST` | `/predict/batch` | Score up to 500 transactions |
 | `POST` | `/explain` | Score one transaction and return SHAP factors |
 
-[`examples/sample_transaction.json`](examples/sample_transaction.json) is a valid
-payload. It has 433 fields because the two `*_is_missing` flags are derived from
-the raw `DeviceInfo` and `id_33` fields. Example:
+[`examples/sample_transaction.json`](examples/sample_transaction.json) is a valid,
+fully synthetic payload. It has 433 fields because the two `*_is_missing` flags
+are derived from the raw `DeviceInfo` and `id_33` fields. No value in the file
+comes from a real transaction. Example:
 
 ```powershell
 $body = Get-Content examples/sample_transaction.json -Raw
@@ -479,9 +495,10 @@ GitHub Actions runs `.github/workflows/ci.yml` on pushes and pull requests to
 
 ## Release notes
 
-The delivery snapshot is documented in [RELEASE_NOTES.md](RELEASE_NOTES.md)
-(`v1.0.0`): verification results, headline metrics, deliverables, handoff
-checklist, and known limitations.
+The release notes are documented in [RELEASE_NOTES.md](RELEASE_NOTES.md).
+`v1.0.0` records the private delivery snapshot; `v1.0.1` is the prepared public
+research release. See the notes for verification results, headline metrics,
+deliverables, the handoff checklist, and known limitations.
 
 ---
 
@@ -510,11 +527,38 @@ checklist, and known limitations.
 
 ---
 
+## Security
+
+The FastAPI service is a local research service. It has no authentication, rate
+limiting, or TLS. Do not expose it directly to the public internet. Report
+vulnerabilities through GitHub's private vulnerability reporting as described in
+[`SECURITY.md`](SECURITY.md).
+
+---
+
 ## Data and license
 
-The dataset is provided by Vesta Corporation for the IEEE-CIS Fraud Detection
-competition on Kaggle. Refer to the competition rules and dataset license before
-redistributing the data.
+### Code license
 
-The source code in this repository does not yet declare a license. Add an explicit
-license before public distribution.
+The source code and documentation are licensed under the **MIT License**. See
+[`LICENSE`](LICENSE). Copyright (c) 2026 Mohammed M. A. Mahani.
+
+### IEEE-CIS dataset
+
+The dataset is the IEEE-CIS Fraud Detection competition data, sponsored by the
+IEEE Computational Intelligence Society and donated by Vesta Corporation, hosted
+by Kaggle. It is **not included** in this repository. The competition rules
+allow non-commercial use only (competition participation, Kaggle forums, academic
+research, and education) and prohibit transmitting, duplicating, publishing, or
+redistributing the data to any party not participating in the competition.
+Obtain the data from Kaggle and accept the rules before use.
+
+See [`DATA_LICENSE.md`](DATA_LICENSE.md) for the full notice.
+
+### Model artifacts
+
+The trained model and preprocessor were fitted on the IEEE-CIS data. They are
+provided for research and education only, "as is", and are not a redistribution
+of the dataset. The MIT License covers the source code and documentation; it does
+not grant rights to the dataset. Commercial or production use requires
+independent legal review and any permission required from the rights holders.

@@ -1,0 +1,9 @@
+# Normalize text files to LF so artifact hashes are identical on every platform.
+* text=auto eol=lf
+
+# Binary artifacts must never be converted.
+*.pkl binary
+*.png binary
+*.npz binary
+*.npy binary
+*.gz binary

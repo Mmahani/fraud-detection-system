@@ -261,9 +261,14 @@ python -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
 
 ## License and data governance
 
-The repository does not declare a code license. The IEEE-CIS data is not
-redistributed; it remains subject to the Kaggle competition rules and dataset
-terms. See the README section [Data and license](README.md#data-and-license).
+The source code and documentation are licensed under the MIT License
+(copyright (c) 2026 Mohammed M. A. Mahani); see [`LICENSE`](LICENSE).
+
+The IEEE-CIS dataset is not redistributed. It remains subject to the Kaggle
+competition rules and dataset terms, including non-commercial use and no
+redistribution. The trained model artifacts are provided for research and
+education only. See [`DATA_LICENSE.md`](DATA_LICENSE.md) and the README section
+[Data and license](README.md#data-and-license).
 
 ## References
 

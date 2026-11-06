@@ -142,7 +142,7 @@ ARTIFACT_SPECS: list[dict[str, Any]] = [
         "path": "results/final_prediction_examples.csv",
         "group": "evaluation",
         "required": True,
-        "description": "Phase 11 prediction examples",
+        "description": "Phase 11 prediction examples (transaction identifiers anonymized)",
     },
     {
         "path": "results/metrics_definition_audit.md",

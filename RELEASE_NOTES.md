@@ -1,4 +1,85 @@
-# Release Notes — v1.0.0
+# Release Notes
+
+## v1.0.1 — Public research release (prepared)
+
+| Item | Value |
+|---|---|
+| Release | `v1.0.1` — prepared public research release |
+| Base | `v1.0.0` snapshot `3a7c4cb` plus release-preparation changes (uncommitted) |
+| Date | 2026-11-05 |
+| Status | **Public research release candidate** — reviewed, tested, and documented. Not approved for autonomous production use. |
+| Code license | **MIT** — Copyright (c) 2026 Mohammed M. A. Mahani |
+| Data | IEEE-CIS data is **not included**; see [DATA_LICENSE.md](DATA_LICENSE.md) |
+| Model | Phase 8 tuned `RandomForestClassifier`, 20 trees, threshold `0.35` |
+| Primary metric | Average Precision (PR-AUC) |
+
+The `v1.0.0` tag remains untouched. Because the repository is still private and
+the publication status of `v1.0.0` could not be verified, this release is
+prepared as `v1.0.1` rather than moving an existing tag. No tag has been created
+or pushed yet.
+
+### What changed for the public research release
+
+- Added the MIT code license and copyright notice.
+- Added the data/model rights notice for the IEEE-CIS dataset.
+- Added a security policy and private vulnerability-reporting guidance.
+- Removed local paths from the README and cleared machine-specific notebook
+  outputs.
+- Replaced `examples/sample_transaction.json` with a fully synthetic 433-field
+  payload.
+- Updated the JSON-null regression test to build its payload from the processed
+  data instead of assuming the example file is the first data row.
+- Added `.gitattributes` and normalized all text files to LF so artifact
+  hashes validate on any platform.
+- Removed the last absolute local path from `results/phase8_fast_report.md`
+  and refreshed the affected manifest hashes.
+- Updated the FastAPI application version to `1.0.1`.
+
+### Data and model rights
+
+The IEEE-CIS dataset is not distributed with this repository. The competition
+rules permit non-commercial use only and prohibit redistribution to any party not
+participating in the competition. The trained model artifacts are provided for
+research and education only. The MIT License covers the source code and
+documentation, not the dataset. See [DATA_LICENSE.md](DATA_LICENSE.md).
+
+### Security
+
+The FastAPI service is a local research service with no authentication, rate
+limiting, or TLS. Do not expose it directly to the internet. See
+[SECURITY.md](SECURITY.md).
+
+### v1.0.1 release checklist
+
+- [x] MIT `LICENSE` and copyright notice
+- [x] `DATA_LICENSE.md` data/model rights notice
+- [x] `SECURITY.md` vulnerability-reporting policy
+- [x] README status, license, data, and security sections updated
+- [x] Model card license section updated
+- [x] Local paths and machine-specific notebook outputs removed
+- [x] Synthetic example payload
+- [x] LF line endings (`.gitattributes`) and cross-platform manifest validation
+- [ ] Commit, tag, and publish (owner approval required)
+- [ ] Verify remote CI after push
+- [ ] Change repository visibility to public (owner action)
+
+### Clean-clone verification
+
+Verified on 2026-11-06 from a fresh clone of `v1.0.0` (`3a7c4cb`) with the
+release-preparation changes applied:
+
+| Check | Result |
+|---|---|
+| Fresh clone + `pip install -r requirements.txt` | Success (Python 3.12.6) |
+| Unit tests | 21 tests: 20 passed, 1 skipped (needs `data/processed`) |
+| `ruff check src scripts tests` | All checks passed |
+| `pip check` | No broken requirements |
+| Artifact manifest | 40/40 present, 0 errors; 6 optional local data files absent as expected |
+| API | `/`, `/health`, `/model/info`, `/model/features`, `/predict`, `/predict/batch`, `/explain`, `/docs` all OK |
+| Notebooks | 12/12 parse; 0 stored outputs |
+| Local paths, secrets, attribution | None found |
+
+## v1.0.0 — Delivery snapshot
 
 | Item | Value |
 |---|---|
@@ -9,7 +90,7 @@
 | Model | Phase 8 tuned `RandomForestClassifier`, 20 trees, threshold `0.35` |
 | Primary metric | Average Precision (PR-AUC) |
 
-## Scope
+### Scope
 
 This snapshot covers the full project path:
 
@@ -21,7 +102,7 @@ This snapshot covers the full project path:
 - Phase 14 GitHub Actions CI.
 - Phase 15 model card and delivery documentation.
 
-## Verification snapshot
+### Verification snapshot
 
 Run on 2026-10-20 from the project root:
 
@@ -39,9 +120,9 @@ The GitHub Actions workflow was validated locally (YAML parse and the same lint/
 commands). Its remote run status could not be queried from the local environment
 because the repository is private and the `gh` CLI is unavailable.
 
-## Headline metrics
+### Headline metrics
 
-### Final model at the frozen 0.35 threshold
+#### Final model at the frozen 0.35 threshold
 
 | Metric | Value |
 |---|---:|
@@ -53,7 +134,7 @@ because the repository is private and the `gh` CLI is unavailable.
 | Accuracy | 0.972161 |
 | TN / FP / FN / TP | 111,825 / 2,150 / 1,138 / 2,995 |
 
-### Five-fold training-only validation
+#### Five-fold training-only validation
 
 | Metric | Mean | Std (ddof=1) |
 |---|---:|---:|
@@ -63,7 +144,7 @@ because the repository is private and the `gh` CLI is unavailable.
 | Precision | 0.737667 | 0.007506 |
 | ROC-AUC | 0.931818 | 0.003393 |
 
-### Phase 6 comparison (Average Precision)
+#### Phase 6 comparison (Average Precision)
 
 | Model | PR-AUC |
 |---|---:|
@@ -72,7 +153,7 @@ because the repository is private and the `gh` CLI is unavailable.
 | Gradient Boosting | 0.343137 |
 | SGD baseline | 0.286753 |
 
-### Phase 12 time buckets (tuned model)
+#### Phase 12 time buckets (tuned model)
 
 | Bucket | PR-AUC | Fraud rate |
 |---|---:|---:|
@@ -86,9 +167,9 @@ Later buckets are stable. The earliest bucket is weaker but also has the lowest
 fraud rate, and PR-AUC is prevalence-sensitive. This is a stability check on the
 random-split holdout, not a strict forward-in-time validation.
 
-## Deliverables
+### Deliverables
 
-### Models and configuration
+#### Models and configuration
 
 - `models/best_tuned_model.pkl`
 - `models/preprocessor.pkl`
@@ -96,7 +177,7 @@ random-split holdout, not a strict forward-in-time validation.
 - `models/model_metadata.json`
 - `models/explainability_config.json`
 
-### Evaluation and explainability
+#### Evaluation and explainability
 
 - `results/final_threshold_test_results.csv`
 - `results/phase8_fast_summary.json`
@@ -108,21 +189,24 @@ random-split holdout, not a strict forward-in-time validation.
 - `results/phase10_final_report.md`
 - `artifacts/manifest.json`
 
-### Service and examples
+#### Service and examples
 
 - `src/prediction.py`
 - `src/api/main.py`, `src/api/schemas.py`
 - `examples/sample_transaction.json`
 
-### Documentation, tests, and CI
+#### Documentation, tests, and CI
 
 - `README.md`
 - `MODEL_CARD.md`
+- `LICENSE` (MIT)
+- `DATA_LICENSE.md` (IEEE-CIS data/model rights notice)
+- `SECURITY.md` (vulnerability-reporting policy)
 - `tests/` (21 tests)
 - `.github/workflows/ci.yml`
 - `requirements.txt`, `requirements-ci.txt`
 
-## How to verify the handoff
+### How to verify the handoff
 
 ```powershell
 python -m pip install -r requirements.txt
@@ -141,7 +225,7 @@ The raw and processed data, the out-of-fold probabilities, and the saved test
 probability arrays are not committed. Tests that require processed data skip
 automatically. See the README for data regeneration.
 
-## Handoff checklist
+### Handoff checklist
 
 - [x] Frozen model, preprocessor, threshold, and metadata
 - [x] Reproducible metrics and canonical PR-AUC audit
@@ -158,9 +242,9 @@ automatically. See the README for data regeneration.
 - [ ] Drift and performance monitoring
 - [ ] API authentication, rate limiting, and TLS
 - [ ] Deployment pipeline / container image
-- [ ] Explicit code license before public distribution
+- [ ] Explicit code license before public distribution (completed in `v1.0.1`; see above)
 
-## Known limitations
+### Known limitations
 
 - The split is random and stratified, not time-based; `TransactionDT` is a strong
   feature, so temporal leakage remains possible.
@@ -173,10 +257,11 @@ automatically. See the README for data regeneration.
   gateway.
 - Raw/processed data and `.npy` probability arrays are intentionally excluded
   from Git.
-- The repository does not declare a code license; the dataset remains subject to
-  the IEEE-CIS/Kaggle terms.
+- The code is MIT-licensed, but the IEEE-CIS dataset remains subject to the
+  Kaggle competition rules, including non-commercial use and no redistribution.
+  The trained model artifacts are provided for research and education only.
 
-## Recommended next steps
+### Recommended next steps
 
 1. Run a strict forward-in-time retrain and compare it with the random-split
    metrics.

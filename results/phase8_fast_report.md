@@ -82,7 +82,7 @@ For reference, the tuned model's test PR-AUC improved from **0.722463** to **0.7
 
 ## Saved artifacts
 
-The following files were created in `/home/ubuntu/fraud_local`:
+The following files were created in the project root:
 
 - `models/best_tuned_model.pkl`
 - `results/best_model_parameters.json`

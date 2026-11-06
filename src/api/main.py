@@ -104,7 +104,7 @@ app = FastAPI(
         "Inference service for the frozen Phase 8 tuned Random Forest. "
         "The threshold is 0.35 and the risk bands are presentation-only."
     ),
-    version="1.0.0",
+    version="1.0.1",
     lifespan=lifespan,
 )
 

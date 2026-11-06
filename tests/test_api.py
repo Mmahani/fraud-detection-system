@@ -86,7 +86,8 @@ class ApiTests(unittest.TestCase):
 
         frame = pd.read_csv(DATA_PATH, nrows=1)
         direct = predict_transaction(frame)
-        response = self.client.post("/predict", json=self.sample)
+        payload = json.loads(frame.to_json(orient="records"))[0]
+        response = self.client.post("/predict", json=payload)
         self.assertEqual(response.status_code, 200, response.text)
         self.assertAlmostEqual(
             response.json()["fraud_probability"],
